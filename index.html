@@ -1,0 +1,3120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chamber HQ">
+<meta name="theme-color" content="#1F4E78">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Chamber HQ — Ashly</title>
+
+<!-- PWA: Inline manifest (no separate file needed) -->
+<link rel="manifest" href="manifest.json">
+
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%231F4E78'/%3E%3Ctext x='90' y='124' font-size='105' text-anchor='middle' font-family='sans-serif'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root {
+    --navy: #1F4E78;
+    --navy-dark: #143553;
+    --orange: #ED7D31;
+    --green: #70AD47;
+    --red: #C00000;
+    --yellow: #FFC000;
+    --bg: #F7F8FA;
+    --card: #FFFFFF;
+    --border: #E3E8EE;
+    --border-strong: #C9D2DD;
+    --text: #1A2332;
+    --muted: #6B7280;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: contain;
+  }
+  body { padding-bottom: 88px; padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+
+  /* --- HEADER --- */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, #2E6BA8 100%);
+    color: white;
+    padding: 22px 18px 18px;
+    padding-top: calc(22px + env(safe-area-inset-top));
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+  }
+  .header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  header h1 { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; }
+  .install-btn {
+    background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 12px; border-radius: 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+    display: none;
+  }
+  .install-btn.show { display: block; }
+  .header-sub { font-size: 12px; opacity: 0.85; margin-top: 2px; font-weight: 500; }
+
+  /* --- TAB BAR (bottom) --- */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    background: var(--card); border-top: 1px solid var(--border);
+    padding: 8px 4px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    display: flex; justify-content: space-around;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+  }
+  .nav-btn {
+    flex: 1; background: transparent; border: none; padding: 8px 4px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    color: var(--muted); cursor: pointer; font-family: inherit;
+    transition: color 0.15s;
+  }
+  .nav-btn .icon { font-size: 22px; }
+  .nav-btn .lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.2px; }
+  .nav-btn.active { color: var(--navy); }
+  .nav-btn:active { transform: scale(0.94); }
+
+  /* --- MAIN VIEW --- */
+  .container { max-width: 800px; margin: 0 auto; padding: 14px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* --- STATS --- */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px;
+  }
+  .stat {
+    background: var(--card); border-radius: 10px; padding: 10px 6px;
+    text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .stat .n { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1.05; }
+  .stat .l { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 3px; font-weight: 700; }
+  .stat.urgent .n { color: var(--red); }
+  .stat.done .n { color: var(--green); }
+
+  /* --- TABS WITHIN VIEW --- */
+  .tabs {
+    display: flex; gap: 6px; margin-bottom: 14px;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    padding: 2px 0;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0; padding: 8px 14px; border-radius: 999px; font-size: 13px;
+    border: 1.5px solid var(--border); background: var(--card); color: var(--text);
+    cursor: pointer; font-weight: 600; white-space: nowrap;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .tab .count {
+    display: inline-block; margin-left: 6px; padding: 1px 7px;
+    background: rgba(255,255,255,0.25); border-radius: 999px; font-size: 11px;
+  }
+  .tab:not(.active) .count { background: rgba(0,0,0,0.08); }
+
+  /* --- SEARCH BAR --- */
+  .search-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+  .search {
+    flex: 1; padding: 10px 14px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--card);
+    font-size: 14px; font-family: inherit; color: var(--text);
+  }
+  .search:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(31,78,120,0.1); }
+
+  /* --- TASK CARDS --- */
+  .task {
+    background: var(--card); border-radius: 12px; padding: 14px;
+    margin-bottom: 10px; border: 1px solid var(--border);
+    border-left: 4px solid var(--border); box-shadow: var(--shadow);
+    transition: all 0.2s;
+  }
+  .task.priority-today { border-left-color: var(--red); }
+  .task.priority-week { border-left-color: var(--orange); }
+  .task.priority-next { border-left-color: var(--yellow); }
+  .task.priority-soon { border-left-color: #999; }
+  .task.priority-done { border-left-color: var(--green); opacity: 0.55; }
+  .task.priority-done .title { text-decoration: line-through; }
+
+  .task-row { display: flex; gap: 12px; align-items: flex-start; }
+  .checkbox {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--border-strong); background: white;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; margin-top: 1px;
+  }
+  .checkbox:active { transform: scale(0.9); }
+  .checkbox.checked { background: var(--green); border-color: var(--green); }
+  .checkbox.checked::after { content: "✓"; color: white; font-size: 14px; font-weight: bold; }
+
+  .task-body { flex: 1; min-width: 0; }
+  .task .badges { display: flex; gap: 5px; margin-bottom: 6px; flex-wrap: wrap; }
+  .badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 4px; letter-spacing: 0.3px;
+  }
+  .badge.today { background: var(--red); color: white; }
+  .badge.week { background: var(--orange); color: white; }
+  .badge.next { background: var(--yellow); color: var(--text); }
+  .badge.soon { background: #999; color: white; }
+  .badge.done { background: var(--green); color: white; }
+  .badge.event { background: #E0E7EF; color: var(--navy); }
+  .badge.tool { background: #F3E8D6; color: #8B5A00; }
+  .badge.custom { background: #E5DFF6; color: #5B3C9F; }
+
+  .task .title { font-size: 14px; font-weight: 600; line-height: 1.35; margin-bottom: 4px; }
+  .task .meta { font-size: 12px; color: var(--muted); margin-bottom: 4px; line-height: 1.4; }
+  .task .detail {
+    font-size: 12.5px; color: var(--text); background: var(--bg);
+    padding: 9px 11px; border-radius: 7px; line-height: 1.5;
+    margin-top: 8px;
+    display: none;
+    border-left: 3px solid var(--navy);
+  }
+  .task.expanded .detail { display: block; }
+  .task .actions {
+    display: flex; gap: 12px; margin-top: 6px; align-items: center;
+  }
+  .task .expand, .task .edit-btn, .task .del-btn {
+    font-size: 11.5px; cursor: pointer; font-weight: 600; user-select: none;
+    background: transparent; border: none; padding: 0; font-family: inherit;
+  }
+  .task .expand { color: var(--navy); }
+  .task .edit-btn { color: var(--muted); }
+  .task .del-btn { color: var(--red); margin-left: auto; }
+
+  /* --- SECTION TITLE --- */
+  .section-title {
+    font-size: 11.5px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin: 18px 0 8px 2px;
+  }
+  .section-title:first-child { margin-top: 4px; }
+
+  /* --- EMPTY STATE --- */
+  .empty {
+    text-align: center; padding: 40px 20px; color: var(--muted);
+    background: var(--card); border-radius: 12px; border: 1px dashed var(--border-strong);
+    font-size: 13px;
+  }
+  .empty .emoji { font-size: 36px; margin-bottom: 8px; display: block; }
+
+  /* --- EVENT LIST --- */
+  .event-card {
+    background: var(--card); border-radius: 14px; padding: 14px 16px;
+    margin-bottom: 12px; border: 1px solid var(--border); box-shadow: var(--shadow);
+    cursor: pointer; transition: transform 0.1s;
+  }
+  .event-card:active { transform: scale(0.99); }
+  .event-card .ev-date {
+    font-size: 11px; font-weight: 700; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px;
+  }
+  .event-card .ev-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; line-height: 1.25; }
+  .event-card .ev-meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .event-card .ev-progress {
+    display: flex; align-items: center; gap: 10px; font-size: 12px;
+  }
+  .progress-bar {
+    flex: 1; height: 6px; background: var(--bg); border-radius: 999px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--green); border-radius: 999px; transition: width 0.3s;
+  }
+  .progress-text { color: var(--muted); font-weight: 600; min-width: 50px; text-align: right; }
+
+  /* --- CHECKLIST DETAIL --- */
+  .checklist-header {
+    background: var(--card); border-radius: 14px; padding: 16px;
+    margin-bottom: 14px; box-shadow: var(--shadow);
+    border-left: 4px solid var(--navy);
+  }
+  .checklist-header .back-btn {
+    background: transparent; border: none; color: var(--navy); font-weight: 600;
+    font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 10px;
+    font-family: inherit; display: flex; align-items: center; gap: 4px;
+  }
+  .checklist-header h2 { font-size: 19px; font-weight: 800; line-height: 1.2; margin-bottom: 6px; color: var(--navy); }
+  .checklist-header .ch-meta { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .checklist-header .ch-meta strong { color: var(--navy); }
+
+  .checklist-section {
+    background: var(--card); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+  .checklist-section h3 {
+    font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 10px;
+    text-transform: uppercase; letter-spacing: 0.3px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .checklist-section.prep h3 { color: var(--orange); }
+  .checklist-section.prep { border-left: 3px solid var(--orange); }
+
+  .check-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 9px 0; border-bottom: 1px solid var(--bg);
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item .checkbox { margin-top: 1px; }
+  .check-item .ci-text {
+    flex: 1; font-size: 13.5px; line-height: 1.45; word-wrap: break-word;
+  }
+  .check-item.done .ci-text { text-decoration: line-through; color: var(--muted); }
+  .check-item .ci-del {
+    background: transparent; border: none; color: var(--muted); cursor: pointer;
+    font-size: 18px; padding: 0 4px; opacity: 0.4;
+  }
+  .check-item .ci-del:active { opacity: 1; color: var(--red); }
+
+  .add-item-row {
+    display: flex; gap: 8px; margin-top: 10px; padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+  .add-item-input {
+    flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); font-size: 13px; font-family: inherit; color: var(--text);
+  }
+  .add-item-input:focus { outline: none; border-color: var(--navy); background: white; }
+  .add-item-btn {
+    background: var(--navy); color: white; border: none; padding: 8px 14px;
+    border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+
+  /* --- FAB (Floating Add Button) --- */
+  .fab {
+    position: fixed; bottom: 100px; right: 18px;
+    bottom: calc(100px + env(safe-area-inset-bottom));
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--navy); color: white;
+    border: none; box-shadow: 0 4px 16px rgba(31,78,120,0.4);
+    font-size: 28px; cursor: pointer; z-index: 40;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s;
+  }
+  .fab:active { transform: scale(0.92); }
+
+  /* --- MODAL --- */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: none; align-items: flex-end; justify-content: center;
+    z-index: 100; animation: fadeIn 0.2s;
+  }
+  .modal-backdrop.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal {
+    background: var(--card); width: 100%; max-width: 600px;
+    border-radius: 18px 18px 0 0; padding: 22px 18px;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom));
+    max-height: 90vh; overflow-y: auto; animation: slideUp 0.25s;
+  }
+  .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--navy); }
+  .modal label {
+    display: block; font-size: 12px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; margin-top: 12px;
+  }
+  .modal input, .modal select, .modal textarea {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); font-size: 14px; font-family: inherit; color: var(--text);
+  }
+  .modal input:focus, .modal select:focus, .modal textarea:focus {
+    outline: none; border-color: var(--navy); background: white;
+  }
+  .modal textarea { min-height: 70px; resize: vertical; }
+  .modal-buttons {
+    display: flex; gap: 10px; margin-top: 20px;
+  }
+  .btn {
+    flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit; border: none;
+  }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+  /* --- CALENDAR VIEW --- */
+  .cal-month {
+    background: var(--card); border-radius: 14px; padding: 14px 16px;
+    margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+  .cal-month h3 {
+    font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 10px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .cal-event {
+    display: flex; gap: 12px; padding: 8px 0; align-items: center;
+    border-bottom: 1px solid var(--bg); font-size: 13px;
+  }
+  .cal-event:last-child { border-bottom: none; }
+  .cal-event .ce-date {
+    flex-shrink: 0; width: 44px; text-align: center;
+    background: var(--navy); color: white; border-radius: 8px; padding: 5px 0;
+    font-weight: 700;
+  }
+  .cal-event .ce-date .day { font-size: 16px; line-height: 1; }
+  .cal-event .ce-date .mo { font-size: 10px; text-transform: uppercase; opacity: 0.85; }
+  .cal-event.art .ce-date { background: var(--orange); }
+  .cal-event.major .ce-date { background: #5B3C9F; }
+  .cal-event .ce-name { flex: 1; font-weight: 600; line-height: 1.3; }
+  .cal-event .ce-time { color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+
+  /* --- TOAST --- */
+  .toast {
+    position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: white; padding: 10px 18px; border-radius: 24px;
+    font-size: 13px; font-weight: 600; z-index: 200;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.25s;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+
+  /* --- SETTINGS --- */
+  .settings-section {
+    background: var(--card); border-radius: 12px; padding: 16px;
+    margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+  .settings-section h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .settings-section p { font-size: 13px; color: var(--text); line-height: 1.5; margin-bottom: 10px; }
+  .settings-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-top: 1px solid var(--bg);
+  }
+  .settings-row:first-of-type { border-top: none; }
+  .danger-btn {
+    background: transparent; border: 1px solid var(--red); color: var(--red);
+    padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+  }
+
+  /* --- CONTACTS --- */
+  .contacts-group {
+    background: var(--card); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+  .contacts-group h3 {
+    font-size: 11px; font-weight: 800; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .contact-row {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 0; border-bottom: 1px solid var(--bg);
+  }
+  .contact-row:last-child { border-bottom: none; }
+  .contact-avatar {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
+    background: var(--navy); color: white; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; font-weight: 800; letter-spacing: -0.5px;
+  }
+  .contact-avatar.ext { background: var(--orange); }
+  .contact-avatar.key { background: #5B3C9F; }
+  .contact-info { flex: 1; min-width: 0; }
+  .contact-name { font-size: 14px; font-weight: 700; line-height: 1.25; }
+  .contact-role { font-size: 11.5px; color: var(--muted); margin-top: 2px; font-weight: 500; }
+  .contact-detail { font-size: 12px; color: var(--text); margin-top: 4px; line-height: 1.5; }
+  .contact-actions { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+  .contact-link {
+    font-size: 11.5px; font-weight: 700; color: var(--navy); text-decoration: none;
+    background: #E0E7EF; padding: 3px 9px; border-radius: 6px;
+  }
+  .contact-link.phone { background: #E6F4EA; color: #1E7A34; }
+  .contact-link.email { background: #FFF3E0; color: #8B5A00; }
+  .contact-note {
+    font-size: 11px; color: var(--muted); margin-top: 4px;
+    padding: 5px 8px; background: var(--bg); border-radius: 5px; line-height: 1.4;
+  }
+
+  @media (max-width: 380px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <div>
+      <h1 id="page-title">🚨 Priority Tasks</h1>
+      <div class="header-sub" id="page-sub">Friday, April 24, 2026</div>
+    </div>
+    <button class="install-btn" id="install-btn">📲 Install</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ============== TASKS VIEW ============== -->
+  <div class="view active" id="view-tasks">
+    <div class="stats">
+      <div class="stat urgent"><div class="n" id="stat-today">0</div><div class="l">Today</div></div>
+      <div class="stat"><div class="n" id="stat-week">0</div><div class="l">This Week</div></div>
+      <div class="stat"><div class="n" id="stat-next">0</div><div class="l">Next Week</div></div>
+      <div class="stat done"><div class="n" id="stat-done">0</div><div class="l">Done ✓</div></div>
+    </div>
+    <div class="search-row">
+      <input type="text" class="search" id="task-search" placeholder="Search tasks…" autocomplete="off">
+    </div>
+    <div class="tabs" id="task-tabs"></div>
+    <div id="task-list"></div>
+  </div>
+
+  <!-- ============== EVENTS VIEW ============== -->
+  <div class="view" id="view-events">
+    <div class="search-row">
+      <input type="text" class="search" id="event-search" placeholder="Search events…" autocomplete="off">
+    </div>
+    <div id="event-list"></div>
+  </div>
+
+  <!-- ============== CHECKLIST DETAIL ============== -->
+  <div class="view" id="view-checklist"></div>
+
+  <!-- ============== CALENDAR VIEW ============== -->
+  <div class="view" id="view-calendar">
+    <div id="calendar-list"></div>
+  </div>
+
+  <!-- ============== SETTINGS VIEW ============== -->
+  <div class="view" id="view-settings">
+    <div class="settings-section">
+      <h3>About</h3>
+      <p><strong>Chamber HQ</strong> — Ashly's command center for Prescott Chamber events. All data is stored on this device only.</p>
+    </div>
+    <div class="settings-section">
+      <h3>Install as App</h3>
+      <p><strong>iPhone:</strong> Tap the Share button in Safari → "Add to Home Screen". App will install and run like a native app.</p>
+      <p><strong>Android:</strong> Tap the menu (⋮) in Chrome → "Install app" or "Add to Home screen".</p>
+      <p><strong>Desktop:</strong> Click the install icon in the address bar.</p>
+    </div>
+    <div class="settings-section">
+      <h3>Backup &amp; Restore</h3>
+      <div class="settings-row">
+        <span>Export your data as JSON</span>
+        <button class="btn btn-primary" style="flex:0; padding: 8px 14px; font-size: 13px;" onclick="exportData()">Export</button>
+      </div>
+      <div class="settings-row">
+        <span>Import from backup file</span>
+        <button class="btn btn-secondary" style="flex:0; padding: 8px 14px; font-size: 13px;" onclick="importData()">Import</button>
+      </div>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
+    <div class="settings-section">
+      <h3>Reset</h3>
+      <div class="settings-row">
+        <span>Uncheck all completed tasks</span>
+        <button class="danger-btn" onclick="resetChecks()">Reset Checks</button>
+      </div>
+      <div class="settings-row">
+        <span>Restore default seed data (loses customizations)</span>
+        <button class="danger-btn" onclick="resetAll()">Factory Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== CONTACTS VIEW ============== -->
+  <div class="view" id="view-contacts">
+    <div id="contacts-list"></div>
+  </div>
+
+</div>
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-view="tasks"><span class="icon">🚨</span><span class="lbl">Tasks</span></button>
+  <button class="nav-btn" data-view="events"><span class="icon">📋</span><span class="lbl">Events</span></button>
+  <button class="nav-btn" data-view="calendar"><span class="icon">📅</span><span class="lbl">Calendar</span></button>
+  <button class="nav-btn" data-view="contacts"><span class="icon">👥</span><span class="lbl">Contacts</span></button>
+  <button class="nav-btn" data-view="settings"><span class="icon">⚙️</span><span class="lbl">Settings</span></button>
+</nav>
+
+<!-- Floating Add Button -->
+<button class="fab" id="fab" title="Add new">+</button>
+
+<!-- Add/Edit Modal -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">Add Task</h2>
+    <div id="modal-body"></div>
+    <div class="modal-buttons">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modal-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================================
+// SERVICE WORKER (inline, for offline)
+// ============================================================================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+// PWA install prompt
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-btn').classList.add('show');
+});
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-btn').classList.remove('show');
+});
+
+// ============================================================================
+// SEED DATA — Tasks (from Crystal's transcript) + Events (from Hot Sheet + Drive)
+// ============================================================================
+
+const SEED_TASKS = [
+  // BLUEGRASS — TODAY (Crystal transcript)
+  { id: "bg1", priority: "today", event: "Bluegrass", tool: "Phone",
+    title: "Call back Laura Quan once she returns voicemail",
+    meta: "(928) 273-1816 • lqgemworks@gmail.com",
+    detail: "She's in-and-out, doesn't f-around. Voicemail left asking which booth she wants. Cannot be on the curve with Martin (bubble rave going there). Available Bluegrass spots: 9 and 15." },
+  { id: "bg2", priority: "today", event: "Bluegrass", tool: "Phone",
+    title: "Call Martin Ibarra (Fine Metal) — offer open Bluegrass spot",
+    meta: "Fine Metal Creation",
+    detail: "Pending application. Crystal: offer him a spot. If he can't take it: 'No alternative at this time.' He's fine with that." },
+  { id: "bg3", priority: "today", event: "Bluegrass", tool: "Email",
+    title: "Email Kyle (organic popsicles) — accept + send JotForm link",
+    meta: "Kyle — new vendor, organic frozen popsicles",
+    detail: "Organic popsicles ≠ shaved ice, so Terry Magnett won't flip. Send Bluegrass JotForm application link. Place in available spot once app is in." },
+  { id: "bg4", priority: "today", event: "Bluegrass", tool: "Phone",
+    title: "Call Richard Ryan — offer Bluegrass booth 9 or 15",
+    meta: "(928) 277-9981 • dickryanpottery@gmail.com",
+    detail: "His picks (1, 7, 13) all taken. Only 9 and 15 open right now. Old guy, slow setup, wife with hearing aids. Pick the one with easier load-in. If neither works → check with Glossia about refund (minus $50 app fee)." },
+  { id: "bg5", priority: "today", event: "Bluegrass", tool: "Admin",
+    title: "Verify Smoking Guns refund processed by Glossia",
+    meta: "Smoking Guns BBQ (displaced for Texas Roadhouse)",
+    detail: "Crystal left voicemail + email. TR is presenting sponsor → BBQ slot tent 1. Local + member precedence. If they call: 'No room this year. Thank you, come back next year.' Less is best." },
+  { id: "bg6", priority: "today", event: "Bluegrass", tool: "Sheets",
+    title: "Add Reliable Portable Restrooms to Master Contact Directory",
+    meta: "Your Jaylin contact",
+    detail: "Not member, not local — can't use for Bluegrass this year. Add to master list for future when sponsor needs quick local vendors." },
+  { id: "bg7", priority: "today", event: "Bluegrass", tool: "Drive",
+    title: "Pull 2025 Bluegrass acceptance letter template — update for 2026",
+    meta: "Bluegrass folder → vendors",
+    detail: "Crystal: 'Pull from 2025, update them all, then you're ready.' Update year, dates, booth #, your signature." },
+  { id: "bg8", priority: "today", event: "Bluegrass", tool: "Email",
+    title: "Send acceptance letters to all PLACED Bluegrass vendors EXCEPT Theresa Fenn",
+    meta: "14 vendors in JotForm sheet",
+    detail: "Crystal: 'Immediately start sending acceptance letters.' CC Matt on each. HOLD Theresa Fenn until booth sorted." },
+  { id: "bg9", priority: "today", event: "Bluegrass", tool: "Email",
+    title: "Email blast to Bluegrass past-vendor list — spots remaining",
+    meta: "23-year contact sheet",
+    detail: "After acceptance letters go out: 'Time is running out, book now. Here's what's left: [list].' Crystal's words." },
+
+  // TERRITORIAL — THIS WEEK
+  { id: "td1", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place Tina Bosi (Mama Bear) → Plaza Booth 22",
+    meta: "Plaza event, booth 22 confirmed",
+    detail: "Applied late (March), wants 22. Crystal: give it to her." },
+  { id: "td2", priority: "week", event: "Territorial", tool: "Phone",
+    title: "Call Vicki Cassius (Metal & Ash, NEW) → offer Plaza Booth 2 + 'no floor in store'",
+    meta: "New jewelry vendor",
+    detail: "All her picks (40, 49, 34) taken. New vendors → outer Montezuma row. CRITICAL: discuss her floor rug — 'no floor in the store' rule. Confirm she can drive up to load + park out." },
+  { id: "td3", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place Chelsea Corso (NEW pottery) → Plaza Booth 3",
+    meta: "Corso Pottery",
+    detail: "Picks: 3, 4, 7. You already called — shelves perfect, fine day-of. Booth 3 = end of row = best traffic." },
+  { id: "td4", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place Marcel (Native Wins) → Plaza Booth 114",
+    meta: "Native Wins Jewelry",
+    detail: "Picks 97/114/76. 114 is hard-to-sell (pole + porta-potties) but she wants it. Watch setup speed (driving area)." },
+  { id: "td5", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place Marianne (Marianne's Jewelry) → Plaza Booth 10",
+    meta: "Always same area",
+    detail: "Picks 10/13/14 — 13&14 taken. Easy decision." },
+  { id: "td6", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place Mr. Fitch (Creative Iron Patio, wood) → Plaza Booth 103",
+    meta: "Wood Turner",
+    detail: "Picks 104/103/102. 103 keeps separation from K-n-Kraft pottery. He's an 'I'll-make-it-work' guy." },
+  { id: "td7", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place Tom (Creative Iron Patio metal) → Plaza Booths 29 & 30 (DOUBLE)",
+    meta: "Metal — paid for double",
+    detail: "Bases compliance issue resolved (diagonal ≤6in)." },
+  { id: "td8", priority: "week", event: "Territorial", tool: "Paper",
+    title: "Find Hang 5 Paragrip paper app in FedEx folder → Plaza Booth 102",
+    meta: "20-year vendor, paper only",
+    detail: "Always Booth 102. Find in FedEx folder Crystal handed you. POLICY: no more paper apps after this year." },
+  { id: "td9", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Verify Chef Andrea placement → Plaza Booth 56",
+    meta: "Already entered per Crystal",
+    detail: "Verify in sheet, mark confirmed." },
+  { id: "td10", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place Priscilla Finney (Safari Samosas) → Plaza Booth C (food)",
+    meta: "Front food row",
+    detail: "Always in C. System won't accept letter booths — enter 0 placeholder. Fix system later." },
+  { id: "td11", priority: "week", event: "Territorial", tool: "Email",
+    title: "Email Eric Exom (Happy Hippie) → confirm Plaza Booth 81",
+    meta: "Hot sauce / food product",
+    detail: "Picks 79/70/71 in Terry's area. Tried 66, sun wrong (food needs back facing sun). 81 works." },
+  { id: "td12", priority: "week", event: "Territorial", tool: "Sheets",
+    title: "Place CF Chocolate (SF Chocolate Factory) → Plaza Booth E",
+    meta: "Jay Levine",
+    detail: "Last year had bee problem. Crystal promised E from here on. County notified, beast spray stocked." },
+  { id: "td13", priority: "week", event: "Territorial", tool: "Email",
+    title: "Tara (Light Therapy) — DENY plaza, refund booth fee",
+    meta: "Light Therapy Trap",
+    detail: "Not member, not artist. Told last year only qualifies for Off-Street. Keep $50 app fee. If she pushes back → route to Glossia, NOT you." },
+  { id: "td14", priority: "week", event: "Territorial", tool: "Phone",
+    title: "Call Richard Ryan (Territorial) → offer Plaza Booth 107",
+    meta: "Picks all taken",
+    detail: "Picks 44/39/4/89 all taken. 107 = easy driveway in/out for his wife with hearing aids. Script: 'Your picks weren't available, I spoke with Crystal. We know you liked easy load-in. Would you consider 107?'" },
+  { id: "td15", priority: "week", event: "Territorial", tool: "Internal",
+    title: "Ask Sheri about Trevor Brown — sponsor conflict",
+    meta: "Everlasting Windows vs Anderson Windows",
+    detail: "Trevor applied to everything after Off-Street. Anderson Windows is a sponsor. Crystal/Glossia split. Bigger Q for Sheri: 'Do we take additional businesses instead of sponsors on plaza?'" },
+  { id: "td16", priority: "week", event: "Territorial", tool: "JotForm",
+    title: "Burn through pending Territorial approvals (68 submissions)",
+    meta: "Auto-sends acceptance email on click",
+    detail: "Crystal: 'You know the requirements. Approve all you can. Only ask me about the ones you're unsure of.'" },
+  { id: "td17", priority: "week", event: "Territorial", tool: "JotForm",
+    title: "Backfill acceptance emails for already-approved vendors",
+    meta: "Workflow didn't run retroactively",
+    detail: "Either backdate in JotForm or manually send catch-up emails to vendors approved before workflow was set up." },
+  { id: "td18", priority: "week", event: "Territorial", tool: "JotForm",
+    title: "Fix JotForm booth field — accept LETTERS (A-J, C, E)",
+    meta: "System bug",
+    detail: "Currently using 0 placeholder. Change field type in JotForm so it accepts text values." },
+];
+
+const SEED_EVENTS = [
+  // ============= MAY =============
+  {
+    id: "vc-may4", name: "Vets Connect Quarterly Business Mixer", date: "2026-05-04",
+    time: "5:00–6:30 PM (arrive 4:30)", venue: "Ernest A. Love American Legion Post 6",
+    address: "202 S Pleasant St, Prescott, AZ 86303",
+    contact: "Brenda Smull (Special Affairs)", emcee: "Patrick Kuykendall",
+    sponsors: "STANDING (no outreach needed): APS, Bucky's & Yavapai Casinos, Yavapai Title, OneAZ CU",
+    type: "vets-mixer", emoji: "🎖️",
+    note: "Acknowledge Team RWB partnership. Dignitary: Jeff Timm (Congressman Eli Crane's office).",
+    sections: [
+      { title: "Venue & Logistics", items: [
+        "Confirm Post 6 booking",
+        "Confirm room setup: networking, podium/mic, refreshments",
+        "Coordinate refreshments with Brenda Smull",
+        "Confirm Patrick Kuykendall as emcee",
+        "Staff arrival 4:30 PM for setup",
+        "Complete walkthrough",
+        "Walkthrough Checklist",
+        "Bring Event Box",
+      ]},
+      { title: "Sponsors & Partners", items: [
+        "Standing sponsors confirmed (no outreach)",
+        "Acknowledge Team RWB partnership",
+        "Confirm Brenda Smull for venue host remarks",
+        "Confirm Jeff Timm (Congressman Eli Crane's office) as dignitary",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Event listed on prescott.org and MC Trade",
+        "RSVP tracking — FREE event, open to public",
+        "Email blast to membership + veteran community contacts",
+        "Social media posts scheduled (Matt) — hotsheet",
+        "Reminder email 1 week before + day before",
+        "Flyer from Matt in event folder — request if missing",
+      ]},
+      { title: "Day-Of", items: [
+        "Arrive 4:30 PM for setup",
+        "Sign-in sheet at entrance",
+        "Veteran sponsor signage displayed",
+        "Photos (Matt)",
+        "Run agenda: Opening 5:00 / Networking 5:05 / Recognition 5:45 / Closing 6:20",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Post 6 / Brenda Smull",
+        "Thank-you to Team RWB",
+        "Follow-up email/survey (Google Forms)",
+        "Upload photos — CapCut + Matt",
+        "Debrief notes",
+        "Announce next: Mon Aug 3 at Club at Prescott Lakes",
+      ]},
+    ],
+  },
+
+  {
+    id: "wib-may13", name: "Women in Business Luncheon", date: "2026-05-13",
+    time: "11:00 AM – 1:00 PM", venue: "Sam Hill Warehouse Event Center",
+    address: "300 N. Montezuma St, Prescott, AZ 86301",
+    contact: "Tamara Burke (Hilton Garden Inn GM)",
+    speaker: "Makayla Chadwick (State Farm / PAYP President)",
+    sponsors: "Presenting: Prescott Woman Magazine | Partner: Inspiring Designs | Dessert: Pralines of Prescott (Diane Babb) | Flowers: Allan's Flowers (Rakini Chinery)",
+    type: "luncheon", emoji: "👜",
+    sections: [
+      { title: "Venue & Logistics", items: [
+        "Confirm Sam Hill Warehouse booking",
+        "Send/receive signed host agreement",
+        "Confirm room setup: luncheon tables, podium/mic, AV, buffet/catering area",
+        "Coordinate catering — confirm caterer + menu",
+        "Confirm $40 registration fee in MC Trade",
+        "Confirm estimated guest count",
+        "Walkthrough scheduled with Tamara Burke",
+        "Staff arrival 11:00 AM",
+        "Bring Event Box — table needed?",
+      ]},
+      { title: "Speakers & Sponsors", items: [
+        "Confirm presenting sponsor: Prescott Woman Magazine",
+        "Confirm event partner: Inspiring Designs",
+        "Confirm host: Tamara Burke for host remarks",
+        "Confirm speaker: Makayla Chadwick",
+        "Confirm Pralines of Prescott (Diane Babb) for dessert",
+        "Confirm Allan's Flowers (Rakini Chinery) for speaker flowers",
+        "Confirm who's introducing speaker — get intro script",
+        "Confirm door prize / raffle items",
+      ]},
+      { title: "Marketing & Reservations", items: [
+        "Listed on prescott.org and MC Trade",
+        "Reservation tracking: $40/attendee, prepaid only, nonrefundable",
+        "Email blast to membership x3 (Constant Contact) — hotsheet",
+        "Social media posts (Matt) x2 — hotsheet",
+        "Reminder email 1 week before + day before",
+        "Flyer from Matt in event folder",
+      ]},
+      { title: "Day-Of Materials", items: [
+        "Printed agendas for all tables",
+        "Sign-in / registration check-in (paid event)",
+        "Sponsor + presenter signage / A-frames",
+        "Speaker flowers from Allan's confirmed pickup/delivery",
+        "Dessert from Pralines confirmed",
+        "Door prize items ready",
+        "Bring Event Box",
+      ]},
+      { title: "Day-Of Execution", items: [
+        "Staff arrive 11:00 AM",
+        "Open networking & seating 11:30",
+        "Welcome & Recognition 11:50",
+        "Around the room — Name, Company, Did You Know? — 12:05",
+        "Speaker intro + presentation 12:30",
+        "Door prizes 1:00",
+        "Closing remarks 1:10",
+        "Photos throughout (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Hilton Garden Inn / Tamara Burke",
+        "Thank-you to Prescott Woman Magazine",
+        "Thank-you to Inspiring Designs",
+        "Thank-you to Pralines + Allan's Flowers",
+        "Thank-you to speaker Makayla Chadwick",
+        "Survey (Google Forms)",
+        "Upload photos — CapCut + Matt",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "spotlight-may19", name: "Chamber Spotlight & Networking", date: "2026-05-19",
+    time: "8:00 – 9:30 AM (arrive 7:30)", venue: "Espire Sports — Banquet Room",
+    address: "Espire Sports", contact: "Kelly Garashe (928-458-0260, kellyg@espiresports.com)",
+    sponsors: "Breakfast: Desert Financial $500 | 2 EXPO Tables",
+    type: "spotlight-breakfast", emoji: "☕",
+    sections: [
+      { title: "Venue", items: [
+        "Confirm Espire Banquet Room reservation",
+        "Verify room capacity & layout (classroom style preferred)",
+        "AV setup (mics, projector, screens)",
+        "Accessibility & parking confirmed",
+        "Staff arrival 7:30 AM",
+      ]},
+      { title: "Speakers", items: [
+        "Confirm speaker lineup",
+        "Collect bios + headshots for marketing",
+        "Discuss talking points / presentations",
+        "Tech run-through if needed",
+      ]},
+      { title: "Sponsors", items: [
+        "Finalize Desert Financial breakfast sponsor",
+        "Confirm sponsor logos for promotion",
+        "Arrange 2 EXPO sponsor tables",
+      ]},
+      { title: "Seating", items: [
+        "Classroom-style layout",
+        "Print + place reserved seating for SPEAKERS TABLE",
+      ]},
+      { title: "Food & Beverage", items: [
+        "Confirm menu + catering with Espire",
+        "Coffee/tea + light breakfast",
+        "Dietary options if needed",
+      ]},
+      { title: "Marketing & Invitations", items: [
+        "Save-the-date sent",
+        "Invitations distributed (email, social, flyers)",
+        "Promote through chamber channels",
+        "Event registration on website / MC Trade",
+      ]},
+      { title: "Day-Of", items: [
+        "Set up check-in/registration table",
+        "Signage + branding placed properly",
+        "Test AV + microphones before start",
+        "Assign event staff/volunteers",
+        "Bring Event Box",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Espire / Kelly Garashe",
+        "Thank-you to Desert Financial",
+        "Thank-you to speakers + EXPO table sponsors",
+        "Survey to attendees",
+        "Photos uploaded",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  // ============= ART SHOWS =============
+  {
+    id: "offstreet-may23", name: "Off-Street Festival", date: "2026-05-23",
+    time: "Memorial Day Weekend — Sat & Sun, all day (arrive early)",
+    venue: "Chamber Parking Lot",
+    contact: "Crystal Stewart (lead) — 928-445-2000 x117",
+    sponsors: "4 EVENT MAJORS",
+    type: "art-show", emoji: "🎨",
+    note: "ART SHOW — your responsibility for booth placements, acceptance letters, vendor communications.",
+    sections: [
+      { title: "🗓️ 90 Days Out (Strategic Prep)", items: [
+        "Open JotForm vendor application",
+        "Send Radio 1 spot to Sheri",
+        "Submit ad to PMC (Prescott Monthly)",
+        "Send flyer to Matt for design",
+        "Media advertisement #1 placed",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter blurb #1 sent",
+        "Vendor applications coming in — review weekly",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2 spot",
+        "Media advertisement #2",
+        "All early-bird placements done",
+        "All food vendors verified for Yavapai County Health permit (Sally Shelby 928-442-5510)",
+      ]},
+      { title: "Vendor Management", items: [
+        "All vendor applications reviewed",
+        "Booth placements assigned (use placement rules)",
+        "Acceptance letters sent (CC Matt)",
+        "Denial letters sent ('No room this year. Less is best.')",
+        "Refunds processed (booth fee only — keep $50 app fee)",
+        "Vendor master spreadsheet updated",
+        "All COIs on file",
+        "All TPT IDs verified",
+        "Health permits verified (food vendors)",
+        "Fire extinguishers required (open flame)",
+      ]},
+      { title: "Marketing (3 Weeks Out)", items: [
+        "Press release sent",
+        "Social media push",
+      ]},
+      { title: "Day-Of Operations (2 Weeks)", items: [
+        "Blast email sent",
+        "Press release #2",
+        "Social media push #2",
+        "Final vendor list to Sally Shelby (Yavapai County Health)",
+        "Walkthrough with Jasmine",
+      ]},
+      { title: "Day-Of (1 Week)", items: [
+        "Final reminder push (all channels)",
+        "Vendor load-in instructions sent",
+        "Volunteer schedule confirmed",
+        "Setup supplies inventoried",
+      ]},
+      { title: "Show Weekend", items: [
+        "Saturday early load-in (vendors)",
+        "Setup complete by show open",
+        "Volunteer check-ins",
+        "Vendor issues triaged on-site",
+        "Cash box / change",
+        "First aid / extinguishers accessible",
+        "Photos throughout",
+      ]},
+      { title: "Post-Event", items: [
+        "Monday post-event inspection",
+        "Thank-you emails to vendors",
+        "Thank-you to volunteers",
+        "Vendor feedback survey",
+        "Debrief notes",
+        "Hot Sheet update",
+      ]},
+    ],
+  },
+
+  {
+    id: "territorial-jun6", name: "Prescott Territorial Days Show", date: "2026-06-06",
+    time: "Sat & Sun, all day", venue: "Courthouse Plaza",
+    contact: "Crystal Stewart — 928-445-2000",
+    sponsors: "4 EVENT MAJORS",
+    type: "art-show", emoji: "🎨",
+    note: "ART SHOW — 68+ submissions. Plaza booth numbers go 1-114+. Specific placements per Crystal in your task list.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Open JotForm vendor application",
+        "Radio 1, PMC submission, media ad #1",
+        "Flyer to Matt",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter blurb #1",
+        "Application review + early placements",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2 + media ad #2",
+        "All vendor placements completed",
+        "Acceptance letters sent (CC Matt)",
+        "Health permits + COIs verified",
+      ]},
+      { title: "Vendor Decisions (See Tasks tab)", items: [
+        "Tina Bosi → Booth 22",
+        "Vicki Cassius → Booth 2 (+ floor rug talk)",
+        "Chelsea Corso → Booth 3",
+        "Marcel (Native Wins) → Booth 114",
+        "Marianne → Booth 10",
+        "Mr. Fitch → Booth 103",
+        "Tom (Creative Iron) → Booths 29 & 30 (double)",
+        "Hang 5 Paragrip → Booth 102 (paper app in FedEx folder)",
+        "Chef Andrea → Booth 56 (verify)",
+        "Priscilla Finney → Booth C",
+        "Eric Exom → Booth 81",
+        "CF Chocolate → Booth E",
+        "Richard Ryan → Booth 107 (offer)",
+        "Tara (Light Therapy) → DENIED, refund booth fee",
+        "Trevor Brown → Sheri's call",
+        "Burn through remaining 50+ pending approvals",
+      ]},
+      { title: "3 Weeks Out", items: [
+        "Press release",
+        "Social media push",
+      ]},
+      { title: "2 Weeks Out", items: [
+        "Blast email",
+        "Press release #2",
+        "Social media #2",
+        "Final vendor list to Sally Shelby",
+        "Walkthrough with Jasmine",
+        "Agenda finalized",
+      ]},
+      { title: "1 Week Out", items: [
+        "Final reminder push",
+        "Vendor load-in instructions",
+        "Volunteer schedule confirmed",
+      ]},
+      { title: "Show Weekend", items: [
+        "Vendor load-in",
+        "Setup complete by open",
+        "Triage issues on-site",
+        "Cash + change",
+        "Photos",
+      ]},
+      { title: "Post-Event", items: [
+        "Monday inspection",
+        "Thank-you emails",
+        "Vendor survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "bluegrass-jun20", name: "45th Annual Bluegrass Festival", date: "2026-06-20",
+    time: "Sat 11AM-8PM, Sun 11AM-3PM", venue: "Goodwin Street",
+    contact: "Sheri Heiney (lead) — 928-445-2001",
+    sponsors: "Texas Roadhouse PRESENTING (gifted 10x20 tent #1, BBQ); Renewal by Andersen",
+    type: "art-show", emoji: "🎵",
+    note: "Bluegrass-themed vendors only. ~20 spots. Bubble rave 5-6 PM Sat (George Benton). Available spots right now: 9, 15.",
+    sections: [
+      { title: "🗓️ Already in Progress (See Tasks tab)", items: [
+        "Laura Quan voicemail returned",
+        "Martin Ibarra called",
+        "Kyle (popsicles) JotForm sent",
+        "Richard Ryan offered booth 9 or 15",
+        "Smoking Guns refund processed",
+        "Theresa Fenn placement sorted",
+        "All other placed vendors → acceptance letters sent (CC Matt)",
+        "Email blast to past Bluegrass vendor list",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2",
+        "Media advertisement",
+        "All vendors confirmed (placement + acceptance)",
+        "Texas Roadhouse setup details confirmed",
+        "George Benton bubble setup confirmed (5-6 PM Sat)",
+      ]},
+      { title: "3 Weeks Out", items: [
+        "Press release",
+        "Social media push",
+      ]},
+      { title: "2 Weeks Out", items: [
+        "Blast email",
+        "Press release #2",
+        "Social media #2",
+        "Final vendor list to Sally Shelby (food vendors)",
+        "Walkthrough with Jasmine",
+      ]},
+      { title: "1 Week Out", items: [
+        "Final reminder push",
+        "Vendor load-in instructions",
+        "Texas Roadhouse final logistics",
+        "George Benton confirmed",
+        "Volunteer schedule",
+      ]},
+      { title: "Show Weekend", items: [
+        "Saturday early load-in",
+        "Texas Roadhouse tent setup (tent #1)",
+        "Bubble rave 5-6 PM Saturday",
+        "Sunday load-in",
+        "Tear down Sunday end",
+      ]},
+      { title: "Post-Event", items: [
+        "Monday inspection",
+        "Thank-you to Texas Roadhouse + Renewal by Andersen",
+        "Thank-you to vendors",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "rodeo-jun25", name: "Frontier Days Rodeo Mixer", date: "2026-06-25",
+    time: "5:00 – 7:00 PM", venue: "Rodeo Grounds",
+    contact: "Jason or Summer (Frontier Days)",
+    sponsors: "No outside sponsors — Regional Chamber",
+    type: "mixer", emoji: "🤠",
+    note: "Per Crystal: this is YOUR first new event running the full prep cascade from scratch.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm venue + date with Jason/Summer",
+        "Confirm event type + format",
+        "Sponsor strategy — 'no outside sponsors, regional chamber' confirmed",
+        "Get on Frontier Days schedule officially",
+        "Initial promotion plan",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1 blurb",
+        "Build event in MC Trade",
+        "Open RSVPs",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2 spot",
+        "Media advertisement",
+        "Confirm refreshments/food at Rodeo Grounds",
+      ]},
+      { title: "Sponsors & Partners", items: [
+        "Frontier Days partnership confirmed",
+        "Regional Chamber participation confirmed",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Listed on prescott.org + MC Trade",
+        "RSVP tracking",
+        "Email blast to membership",
+        "Social media (Matt)",
+        "Reminder 1 week + day before",
+      ]},
+      { title: "1 Week Out", items: [
+        "Confirm headcount with venue",
+        "Send agenda to staff + emcee",
+        "Volunteer schedule",
+        "Bring Event Box",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival early",
+        "Sign-in table",
+        "Networking + remarks",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Frontier Days team",
+        "Thank-you to Regional Chamber",
+        "Survey to attendees",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  // ============= JULY =============
+  {
+    id: "nan-jul16", name: "Networking@Nite (July)", date: "2026-07-16",
+    time: "5:00 – 7:00 PM", venue: "Cutter Aviation",
+    contact: "Callie Printz (928-515-3654, cprintz@cutteraviation.com)",
+    sponsors: "1 EXPO Event Partner — AZ CAP Co. $250/$1000",
+    type: "networking-nite", emoji: "🌙",
+    note: "Working team: Sheri, Crystal, Marie, Matt",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Host agreement on file",
+        "Initial site visit / contact",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Build event in MC Trade",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Confirm food/drinks with Callie",
+      ]},
+      { title: "Office Planning", items: [
+        "Copy of host agreement on file",
+        "Site visit completed",
+        "Event agenda draft",
+        "Event registration on website / MC Trade",
+        "Flyers: membership / website / social / VIC",
+      ]},
+      { title: "Venue", items: [
+        "Drinks and refreshments confirmed",
+        "Sound system",
+        "Display, raffle, 50/50, prize tables",
+        "Space layout",
+        "Expect ~100 attendees",
+      ]},
+      { title: "Day-Of Materials", items: [
+        "Print nametags",
+        "Upcoming Event Flyers",
+        "Bring Event Box",
+        "Sponsor signage (AZ CAP)",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival",
+        "Networking + raffle",
+        "Sponsor recognition",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Cutter Aviation / Callie",
+        "Thank-you to AZ CAP Co.",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "cc-jul22", name: "Coffee Connect (July)", date: "2026-07-22",
+    time: "7:30 – 9:30 AM", venue: "The Club at Prescott Lakes",
+    contact: "Kelli Welch (VERIFY new Event Manager) — 928-443-3523",
+    sponsors: "1 EXPO Event Partner — $250/$1000",
+    type: "coffee-connect", emoji: "☕",
+    note: "Confirm new Event Mgr / F&B Director replacing Kelli.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm host agreement on file",
+        "Site visit date scheduled",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Confirm event manager (new contact at Prescott Lakes)",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Build event in MC Trade",
+      ]},
+      { title: "Office Planning", items: [
+        "Copy of host agreement on file",
+        "Site visit completed",
+        "Event agenda draft",
+        "Event registration on website / MC Trade",
+        "Flyers: membership / website / social / VIC",
+      ]},
+      { title: "Venue", items: [
+        "Drinks + refreshments confirmed",
+        "Sound system",
+        "Raffle, 50/50, prize tables",
+        "Space layout",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival",
+        "Sign-in table",
+        "Event partner recognition",
+        "Networking",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Prescott Lakes",
+        "Thank-you to EXPO event partner",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "mbb-jul29", name: "Men's Business Breakfast (July)", date: "2026-07-29",
+    time: "8:00 – 9:30 AM", venue: "Founding Fathers Collective — SpeakEasy",
+    contact: "Grant Quezeda (928-460-7317, grant@foundingfatherscollective.com)",
+    sponsors: "Breakfast Sponsor $500 | 2 EXPO Tables",
+    type: "breakfast", emoji: "🍳",
+    note: "Working team: Crystal & Matt",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm Founding Fathers booking",
+        "Host agreement on file",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Build event in MC Trade",
+        "Confirm breakfast sponsor",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Confirm 2 EXPO Tables sold",
+        "Speaker confirmed (if any)",
+      ]},
+      { title: "Venue & Logistics", items: [
+        "Confirm SpeakEasy room setup",
+        "AV / mic if speaker",
+        "Coordinate breakfast with Grant",
+        "Staff arrival 7:30 AM",
+        "Bring Event Box",
+      ]},
+      { title: "Sponsors", items: [
+        "Confirm breakfast sponsor",
+        "Confirm 2 EXPO Tables",
+        "Sponsor logos for promotion",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Listed on prescott.org + MC Trade",
+        "Reservation tracking",
+        "Email blast to membership",
+        "Social media (Matt)",
+        "Reminder 1 week + day before",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival 7:30",
+        "Sign-in table",
+        "Sponsor recognition",
+        "Networking + remarks",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Founding Fathers / Grant",
+        "Thank-you to breakfast sponsor",
+        "Thank-you to EXPO sponsors",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  // ============= AUGUST =============
+  {
+    id: "vc-aug3", name: "Vets Connect EXPO (August)", date: "2026-08-03",
+    time: "5:00 – 6:30 PM (arrive 4:30)",
+    venue: "The Club at Prescott Lakes — Clubhouse",
+    contact: "Kelli Welch (VERIFY new Event Mgr) — 928-443-3523",
+    sponsors: "Bucky's & Yavapai Casinos (Presenting) | 1 EXPO Event Partner $250/$1000",
+    type: "vets-expo", emoji: "🎖️",
+    note: "EXPO-STYLE (different from quarterly mixers). Light refreshments. 40-60 attendees. No sponsor seating required.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm new Event Mgr at Prescott Lakes (replacing Kelli Welch)",
+        "Confirm event date + room",
+        "Radio 1, PMC, media ad #1",
+        "Flyer to Matt",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Build event in MC Trade — enable EXPO TABLES + registration",
+        "Pull Feb + May Vets Connect attendee lists for outreach",
+        "Send invitations IMMEDIATELY after May 4 Vets Connect",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2 + media ad #2",
+        "Confirm light refreshments with Prescott Lakes",
+        "Confirm expo table count from sponsor partners",
+        "Final headcount deadline confirmed with venue",
+      ]},
+      { title: "Venue & Logistics", items: [
+        "Confirm Clubhouse booking",
+        "Confirm expo-style room setup (tables, networking flow)",
+        "Light refreshments confirmed",
+        "Staff arrival 4:30 PM",
+        "Bring Event Box",
+        "Complete walkthrough",
+        "Walkthrough Checklist",
+      ]},
+      { title: "Sponsors & Partners", items: [
+        "Bucky's & Yavapai Casinos (Presenting) — confirmed",
+        "1 EXPO Event Partner placed",
+        "Acknowledge Team RWB partnership",
+        "Confirm dignitaries (Eli Crane's office?)",
+        "Confirm emcee/speaker",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Listed on prescott.org + MC Trade",
+        "RSVP tracking — FREE event, public",
+        "Personal invites to past Feb + May VC attendees",
+        "Email blast to membership + veteran community",
+        "Social media (Matt)",
+        "Reminder 1 week + day before",
+        "Flyer from Matt in event folder",
+      ]},
+      { title: "Day-Of", items: [
+        "Arrive 4:30 PM",
+        "Sign-in sheet at entrance",
+        "Veteran sponsor signage",
+        "Expo tables setup",
+        "Photos (Matt)",
+        "Run agenda: Opening / Networking / Recognition / Closing",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Prescott Lakes / new Event Mgr",
+        "Thank-you to Bucky's & Yavapai Casinos",
+        "Thank-you to Team RWB",
+        "Thank-you to EXPO partner",
+        "Survey",
+        "Photos uploaded — CapCut + Matt",
+        "Debrief notes",
+        "Announce next Vets Connect: Mon Nov 2 at Phippen Museum",
+      ]},
+    ],
+  },
+
+  {
+    id: "cp-aug21", name: "Community Pulse (APS)", date: "2026-08-21",
+    time: "8:00 – 10:00 AM", venue: "Espire Sports — Banquet Room",
+    contact: "Kelly Garashe (928-458-0260)",
+    sponsors: "Sponsored by APS | Breakfast: $500 | 2 EXPO Tables",
+    type: "community-pulse", emoji: "📊",
+    note: "⚠️ Verify date: Hot Sheet 8/21 vs scanned 8/28. Working team: Sheri & Matt.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm date with venue (8/21 vs 8/28)",
+        "Host agreement on file",
+        "Radio 1, PMC, media ad",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Build event in MC Trade",
+        "Confirm APS sponsorship details",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Speakers/panelists confirmed",
+        "EXPO tables sold",
+      ]},
+      { title: "Venue", items: [
+        "Confirm Espire Banquet Room",
+        "Layout / AV",
+        "Coordinate breakfast",
+        "Staff arrival 7:30",
+      ]},
+      { title: "Sponsors", items: [
+        "Confirm APS sponsorship",
+        "Confirm $500 breakfast sponsor",
+        "Confirm 2 EXPO Tables",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Listed on prescott.org + MC Trade",
+        "Reservation tracking",
+        "Email blast",
+        "Social media (Matt)",
+        "Reminder 1 week + day before",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival 7:30",
+        "Sign-in table",
+        "Sponsor recognition",
+        "Panel / speakers",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Espire / Kelly",
+        "Thank-you to APS",
+        "Thank-you to EXPO sponsors",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  // ============= SEPTEMBER =============
+  {
+    id: "labor-sep5", name: "Prescott Labor Day Show", date: "2026-09-05",
+    time: "Sat & Sun all day", venue: "Downtown Courthouse Plaza",
+    contact: "Crystal Stewart — 928-445-2000",
+    sponsors: "4 EVENT MAJORS",
+    type: "art-show", emoji: "🎨",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Open JotForm vendor application",
+        "Radio 1, PMC, media ad",
+        "Flyer to Matt",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Application review weekly",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2 + media ad #2",
+        "All placements done",
+        "Acceptance letters sent (CC Matt)",
+        "Health permits + COIs verified",
+      ]},
+      { title: "Vendor Management", items: [
+        "Apply placement rules from Crystal's bible",
+        "Member + local priority",
+        "No duplicate food types",
+        "Booth size matches payment",
+        "All COIs + TPT IDs on file",
+        "Health permits (food vendors)",
+        "Fire extinguishers (open flame)",
+      ]},
+      { title: "3 Weeks Out", items: [
+        "Press release",
+        "Social media push",
+      ]},
+      { title: "2 Weeks Out", items: [
+        "Blast email",
+        "Press release #2",
+        "Social media #2",
+        "Final vendor list to Sally Shelby",
+        "Walkthrough with Jasmine",
+      ]},
+      { title: "1 Week Out", items: [
+        "Final reminder push",
+        "Vendor load-in instructions",
+        "Volunteer schedule",
+      ]},
+      { title: "Show Weekend", items: [
+        "Vendor load-in",
+        "Setup complete by open",
+        "Triage on-site",
+        "Photos",
+      ]},
+      { title: "Post-Event", items: [
+        "Monday inspection",
+        "Thank-you emails to vendors",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "nmb-sep18", name: "New Member Breakfast (September)", date: "2026-09-18",
+    time: "8:00 – 9:30 AM", venue: "Touchmark — Charley's Restaurant",
+    contact: "Joe Brown (928-632-7800) / Brooklyn Sanchez",
+    sponsors: "1 EXPO Event Partner $250/$1000",
+    type: "breakfast", emoji: "🥐",
+    note: "Working team: Sheri & Marie",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm Touchmark booking",
+        "Host agreement on file",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Build event in MC Trade",
+        "Pull list of new members since last breakfast",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Confirm EXPO partner",
+        "Personal invites to all new members",
+      ]},
+      { title: "Venue", items: [
+        "Confirm Charley's room setup",
+        "Coordinate breakfast menu",
+        "Staff arrival 7:30",
+        "Bring Event Box",
+      ]},
+      { title: "Sponsors", items: [
+        "Confirm EXPO Event Partner",
+        "Sponsor signage prepped",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Listed on prescott.org + MC Trade",
+        "Personal invites to ALL new members",
+        "Email blast",
+        "Reminder 1 week + day before",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival 7:30",
+        "Sign-in table — NEW MEMBER badges/ribbons",
+        "New member introductions",
+        "Sponsor recognition",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Touchmark / Joe + Brooklyn",
+        "Thank-you to EXPO partner",
+        "Welcome packet follow-up to new members",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "salute-sep21", name: "Salute to Educators", date: "2026-09-21",
+    time: "5:00 – 6:30 PM", venue: "Espire Sports — Banquet Room",
+    contact: "Kelly Garashe (928-458-0260)",
+    sponsors: "Presenting: Findlay EXPO + Texas Roadhouse EXPO | 2 EXPO Event Partner $250",
+    type: "recognition", emoji: "🍎",
+    note: "Working team: Sheri, Crystal, Marie, Matt",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm Espire booking",
+        "Coordinate with school districts (PUSD, etc.) for honorees",
+        "Radio 1, PMC, media ad",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Build event in MC Trade",
+        "Confirm Findlay + Texas Roadhouse presenting EXPOs",
+        "Honorees list finalized with districts",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Honoree certificates ordered",
+        "Confirm 2 EXPO Event Partners",
+      ]},
+      { title: "Venue & Logistics", items: [
+        "Espire Banquet Room confirmed",
+        "AV: mic, slideshow capability",
+        "Coordinate refreshments",
+        "Staff arrival 4:00 PM (early — recognition setup)",
+        "Bring Event Box + certificate frames",
+      ]},
+      { title: "Sponsors & Honorees", items: [
+        "Findlay EXPO confirmed (Presenting)",
+        "Texas Roadhouse EXPO confirmed (Presenting)",
+        "2 EXPO Partners placed",
+        "Honoree list with full names + schools",
+        "Slideshow/photo of each honoree",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Listed on prescott.org + MC Trade",
+        "Personal invites to honorees + their families",
+        "Invites to school admin (principals, district)",
+        "Email blast",
+        "Social media (Matt)",
+        "Reminder 1 week + day before",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival 4:00 PM",
+        "Honoree check-in + photo backdrop",
+        "Sign-in table",
+        "Sponsor recognition",
+        "Honoree recognition ceremony",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Espire / Kelly",
+        "Thank-you to Findlay + Texas Roadhouse",
+        "Thank-you to honorees",
+        "Send photos to honorees + districts",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  // ============= OCTOBER =============
+  {
+    id: "fall-oct3", name: "Prescott Fall Show", date: "2026-10-03",
+    time: "Sat & Sun all day", venue: "Courthouse Plaza",
+    contact: "Crystal Stewart — 928-445-2000",
+    sponsors: "4 EVENT MAJORS", type: "art-show", emoji: "🎨",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Open JotForm vendor application",
+        "Radio 1, PMC, media ad",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Application review",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2 + media ad #2",
+        "All placements done",
+        "Acceptance letters sent",
+      ]},
+      { title: "Vendor Management", items: [
+        "Apply Crystal's placement rules",
+        "All COIs + TPT IDs on file",
+        "Health permits (food)",
+      ]},
+      { title: "3 Weeks Out", items: ["Press release", "Social media"] },
+      { title: "2 Weeks Out", items: [
+        "Blast email", "Press release #2", "Social media #2",
+        "Final vendor list to Sally Shelby",
+      ]},
+      { title: "1 Week Out", items: ["Final reminder", "Load-in instructions", "Volunteer schedule"] },
+      { title: "Show Weekend", items: ["Load-in", "Setup", "On-site triage", "Photos"] },
+      { title: "Post-Event", items: ["Monday inspection", "Thank-yous", "Survey", "Debrief"] },
+    ],
+  },
+
+  {
+    id: "nan-oct15", name: "Networking@Nite (October)", date: "2026-10-15",
+    time: "5:00 – 7:00 PM", venue: "The Barley Hound — Rear Patio",
+    contact: "Karrigan Karcie (480-300-1648, kkarcie@viviligroup.com)",
+    sponsors: "1 EXPO Event Partner — Inspiring Designs",
+    type: "networking-nite", emoji: "🌙",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: ["Host agreement on file", "Site visit"] },
+      { title: "🗓️ 60 Days Out", items: ["Newsletter #1", "Build event in MC Trade"] },
+      { title: "🗓️ 30 Days Out", items: ["Newsletter #2", "Confirm Inspiring Designs sponsorship"] },
+      { title: "Office Planning", items: [
+        "Host agreement on file", "Site visit", "Event agenda draft",
+        "Registration on website / MC Trade", "Flyers everywhere",
+      ]},
+      { title: "Venue", items: [
+        "Drinks + refreshments confirmed (Barley Hound bar)",
+        "Sound system / portable mic",
+        "Display, raffle, 50/50 tables",
+        "Patio layout — weather backup plan",
+        "Expect ~100 attendees",
+      ]},
+      { title: "Day-Of Materials", items: [
+        "Print nametags", "Upcoming Event Flyers", "Bring Event Box",
+        "Inspiring Designs signage",
+      ]},
+      { title: "Day-Of", items: ["Staff arrival", "Networking + raffle", "Sponsor recognition", "Photos"] },
+      { title: "Post-Event", items: [
+        "Thank-you to Barley Hound / Karrigan",
+        "Thank-you to Inspiring Designs",
+        "Survey", "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "pba-oct29", name: "Prescott Business Awards", date: "2026-10-29",
+    time: "8:00 – 10:30 AM", venue: "Prescott Resort Hotel — Gold Water Ballroom",
+    contact: "Stacey Rathbone (928-776-5699)",
+    sponsors: "AZ Community Foundation | Coffee Bar $1500 | Floral $300 | Centerpiece $1500 | Entertainment $500 (Inspiring Designs) | Stage $250 (Granite Mountain Orthopedics)",
+    type: "awards", emoji: "⭐",
+    note: "MAJOR EVENT. Working team: ALL HANDS ON DECK.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm Gold Water Ballroom booking",
+        "Open nominations for Business Awards",
+        "Coordinate with judging committee",
+        "Radio 1, PMC, media ad",
+        "Flyer to Matt",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Nominations close — judging begins",
+        "Confirm all sponsorships (Coffee Bar, Floral, Centerpiece, Entertainment, Stage)",
+        "Confirm Inspiring Designs (Entertainment) — coordinate music/audio",
+        "Confirm Granite Mountain Orthopedics (Stage)",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Radio 2 + media ad #2",
+        "Winners selected (kept confidential)",
+        "Award trophies/certificates ordered",
+        "Slideshow/video for winners in production",
+      ]},
+      { title: "Venue & Logistics", items: [
+        "Gold Water Ballroom confirmed",
+        "Stage setup confirmed (Granite Mountain Orthopedics)",
+        "AV: mics, projector, video playback",
+        "Floral arrangements (Coffee Bar sponsor)",
+        "Centerpieces ordered",
+        "Catering / coffee bar",
+        "Staff arrival 6:30 AM (early major event)",
+        "Bring Event Box + award trophies",
+      ]},
+      { title: "Sponsors", items: [
+        "AZ Community Foundation (overall)",
+        "Coffee Bar $1500 confirmed",
+        "Floral $300 confirmed",
+        "Centerpiece $1500 confirmed",
+        "Entertainment $500 — Inspiring Designs",
+        "Stage $250 — Granite Mountain Orthopedics",
+        "Sponsor logos in slideshow/program",
+      ]},
+      { title: "Awards & Honorees", items: [
+        "Winners notified (confidential)",
+        "Winner bios + photos collected",
+        "Award trophies engraved + ready",
+        "Slideshow finalized",
+        "Emcee briefed on pronunciation + categories",
+      ]},
+      { title: "Marketing & Reservations", items: [
+        "Listed on prescott.org + MC Trade",
+        "Reservation tracking — paid event",
+        "Email blast x3",
+        "Social media campaign",
+        "Reminder 1 week + day before",
+        "Honoree tables reserved",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival 6:30 AM",
+        "Stage + AV setup",
+        "Floral + centerpiece placement",
+        "Coffee bar setup",
+        "Registration + check-in",
+        "Sponsor recognition",
+        "Award presentation",
+        "Photos (Matt) + professional photographer if booked",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Prescott Resort / Stacey",
+        "Thank-you to ALL sponsors (individually)",
+        "Thank-you to honorees + send photos",
+        "Press release announcing winners",
+        "Social media winner announcements",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  // ============= NOVEMBER =============
+  {
+    id: "vc-nov2", name: "Vets Connect (November)", date: "2026-11-02",
+    time: "5:00 – 6:30 PM", venue: "The Phippen Museum",
+    contact: "Edd Kellerman (928-778-1385, edd@phippenartmuseum.org)",
+    sponsors: "Bucky's & Yavapai Casinos (Presenting) | 1 EXPO Event Partner $250/$1000",
+    type: "vets-mixer", emoji: "🎖️",
+    note: "Working team: Sheri, Crystal, Marie",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm Phippen Museum booking",
+        "Confirm event format (mixer vs expo)",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Build event in MC Trade",
+        "Confirm sponsors (standing for VC events)",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Pull past Vets Connect attendee lists",
+        "Confirm refreshments with Phippen",
+      ]},
+      { title: "Venue & Logistics", items: [
+        "Confirm Phippen Museum room/space",
+        "Confirm museum access protocols",
+        "Coordinate refreshments with Edd",
+        "Staff arrival 4:30 PM",
+        "Bring Event Box",
+      ]},
+      { title: "Sponsors & Partners", items: [
+        "Bucky's & Yavapai Casinos (Presenting)",
+        "1 EXPO Event Partner",
+        "Acknowledge Team RWB partnership",
+      ]},
+      { title: "Marketing & RSVPs", items: [
+        "Listed on prescott.org + MC Trade",
+        "RSVP tracking",
+        "Personal invites to past VC attendees",
+        "Email blast to membership + veteran community",
+        "Social media (Matt)",
+        "Reminder 1 week + day before",
+      ]},
+      { title: "Day-Of", items: [
+        "Arrive 4:30 PM",
+        "Sign-in sheet",
+        "Veteran sponsor signage",
+        "Photos (Matt)",
+        "Run agenda",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Phippen / Edd",
+        "Thank-you to Bucky's & Yavapai Casinos",
+        "Thank-you to Team RWB",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "wib-nov4", name: "Women in Business (November)", date: "2026-11-04",
+    time: "11:00 AM – 1:30 PM", venue: "Sam Hill Warehouse Event Center",
+    contact: "Tamara Burks (928-515-3422, tamara.burks@hilton.com)",
+    sponsors: "Casa Auto Group (Event Partner — introduces speaker) | 1 EXPO Event Partner AZ CAP $250/$1000 | Flowers $100 | Table gifts $150",
+    speaker: "Nicole Brandon (deck due Oct 29)",
+    type: "luncheon", emoji: "👜",
+    note: "Working team: LADIES. Casa Auto Group introduces Nicole Brandon. Speaker deck due Oct 29.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm Sam Hill Warehouse booking",
+        "Send/receive signed host agreement",
+        "Confirm speaker Nicole Brandon",
+        "Confirm Casa Auto Group as Event Partner",
+        "Confirm Pralines + Allan's Flowers",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter #1",
+        "Email Earl Moss (Casa Auto): request guest names for 2 reservations, confirm marketing setup",
+        "Email Amore Cianciola (Hassayampa): confirm meal + final headcount deadline",
+        "Email Nicole Brandon: deck due NLT October 29",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Confirm AZ CAP EXPO partner",
+        "Sheri does menu tasting in October",
+        "Speaker deck reminder to Nicole Brandon (Friday before event week)",
+      ]},
+      { title: "Venue & Logistics", items: [
+        "Confirm Sam Hill Warehouse",
+        "Room setup: luncheon tables, podium/mic, AV, buffet",
+        "Catering confirmed",
+        "$40 registration fee in MC Trade",
+        "Walkthrough with Tamara",
+        "Staff arrival 10:30 AM",
+        "Bring Event Box",
+      ]},
+      { title: "Speakers & Sponsors", items: [
+        "Nicole Brandon confirmed + deck received by Oct 29",
+        "Casa Auto Group materials ready (6-ft table, giveaways, branded tablecloth)",
+        "Earl Moss to introduce Nicole Brandon",
+        "AZ CAP EXPO partner confirmed",
+        "Pralines of Prescott (dessert) confirmed",
+        "Allan's Flowers (speaker flowers) confirmed",
+        "Door prize / raffle items",
+      ]},
+      { title: "Marketing & Reservations", items: [
+        "Listed on prescott.org + MC Trade",
+        "Reservation tracking: $40, prepaid only, nonrefundable",
+        "Email blast x3",
+        "Social media (Matt) x2",
+        "Reminder 1 week + day before",
+      ]},
+      { title: "Day-Of Materials", items: [
+        "Printed agendas for tables",
+        "Sign-in / registration",
+        "Sponsor + presenter signage",
+        "Speaker flowers from Allan's",
+        "Dessert from Pralines",
+        "Door prizes",
+        "Bring Event Box",
+      ]},
+      { title: "Day-Of Execution", items: [
+        "Staff arrive 10:30",
+        "Open networking 11:00",
+        "Welcome + Recognition 11:30",
+        "Around the room — Did You Know? — 11:50",
+        "Speaker intro + presentation 12:30",
+        "Door prizes 1:15",
+        "Closing 1:25",
+        "Photos throughout (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Sam Hill / Tamara",
+        "Thank-you to Casa Auto Group / Earl Moss",
+        "Thank-you to AZ CAP",
+        "Thank-you to Nicole Brandon",
+        "Thank-you to Pralines + Allan's",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "jersey-nov5", name: "Friends of Jersey Lilly Auction", date: "2026-11-05",
+    time: "6:00 – 8:00 PM", venue: "Jersey Lily Saloon",
+    contact: "Josh Makerur (928-541-7854, whiskeyrllc@gmail.com)",
+    sponsors: "NONE — NOT OUR EVENT (we support)",
+    type: "support", emoji: "🎺",
+    note: "Working team: ALL HANDS ON DECK. We support, don't run.",
+    sections: [
+      { title: "🗓️ 30 Days Out", items: [
+        "Confirm chamber attendance with Josh",
+        "Promote on chamber social media",
+        "Newsletter mention",
+      ]},
+      { title: "Day-Of", items: [
+        "Chamber team arrives ready to support",
+        "Bring auction donation if applicable",
+        "Photos for chamber social",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Jersey Lily / Josh",
+        "Social media post about event",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "turkey-nov23", name: "Flying High Turkey Drive", date: "2026-11-23",
+    time: "12:00 – 6:00 PM (Monday before Thanksgiving)",
+    venue: "Multiple Fry's Locations",
+    contact: "Sheri Heiney (lead) — 928-445-2000",
+    sponsors: "Shared with Yavapai Food Bank",
+    type: "community-service", emoji: "🦃",
+    note: "Working team: Sheri & Matt (lead) — Marie & Crystal (runners)",
+    sections: [
+      { title: "🗓️ 60 Days Out", items: [
+        "Confirm Fry's locations + windows",
+        "Confirm partnership with Yavapai Food Bank",
+        "Coordinate radio promotion (Sheri)",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter call for volunteers",
+        "Social media campaign launches",
+        "Coordinate signage + tents per location",
+        "Volunteer schedule built",
+      ]},
+      { title: "Logistics", items: [
+        "Tent + tables per Fry's location",
+        "Donation collection supplies (bins, gift cards prep)",
+        "Volunteer assignments per location",
+        "Runner schedule (Marie + Crystal)",
+        "Yavapai Food Bank pickup coordination",
+      ]},
+      { title: "Marketing", items: [
+        "Radio promotion (Sheri)",
+        "Social media campaign (Matt)",
+        "Newsletter",
+        "Press release",
+        "Local TV/news coverage outreach",
+      ]},
+      { title: "Day-Of", items: [
+        "Volunteer setup at each location 11:30 AM",
+        "Donation collection 12-6 PM",
+        "Runner pickups for Yavapai Food Bank",
+        "Photos throughout (Matt)",
+        "Tear down + final delivery to Food Bank",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Fry's stores",
+        "Thank-you to Yavapai Food Bank",
+        "Thank-you to volunteers",
+        "Total donation announcement",
+        "Press release recap",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "tree-nov24", name: "Pine Ridge Holiday Tree Lighting", date: "2026-11-24",
+    time: "5:00 – 6:30 PM", venue: "Pine Ridge Marketplace — MAIN",
+    contact: "Anji Rodarte (714-262-6508, anji@retailmarketingroup.com)",
+    sponsors: "Sound Sponsor $1500 | Candy Cane Sponsor $250",
+    type: "community-event", emoji: "🎄",
+    note: "Pine Ridge partnership is sensitive. Deal through Anji ONLY — do NOT escalate to ownership. If issues, route through Glossia.",
+    sections: [
+      { title: "🗓️ 60 Days Out", items: [
+        "Confirm date with Anji",
+        "Confirm Sound Sponsor",
+        "Confirm Candy Cane Sponsor",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter blurb",
+        "Social media campaign starts",
+        "Coordinate tree lighting program/order of events",
+        "Confirm any speakers/dignitaries",
+      ]},
+      { title: "Logistics", items: [
+        "Sound system setup (Sound Sponsor)",
+        "Candy cane distribution prep",
+        "Photo spot / Santa coordinator",
+        "Music/carolers booked if applicable",
+      ]},
+      { title: "Marketing", items: [
+        "Listed on prescott.org",
+        "Social media campaign (Matt)",
+        "Newsletter",
+        "Press / local news outreach",
+      ]},
+      { title: "Day-Of", items: [
+        "Setup 3:30 PM",
+        "Sound check",
+        "Family activities start 5:00",
+        "Tree lighting ceremony 6:00",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Pine Ridge / Anji",
+        "Thank-you to Sound + Candy Cane sponsors",
+        "Photos to social",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "shopsmall-nov28", name: "Shop Small — Small Business Saturday", date: "2026-11-28",
+    time: "All day (Saturday after Thanksgiving)",
+    venue: "Downtown Prescott + Pine Ridge Marketplace",
+    contact: "Anji Rodarte (714-262-6509)",
+    sponsors: "LiVE Remote Sponsor $1500 | 2 EXPO Tables in VC $250",
+    type: "community-event", emoji: "🛍️",
+    note: "Working team: SHERI",
+    sections: [
+      { title: "🗓️ 60 Days Out", items: [
+        "Confirm LiVE Remote Sponsor",
+        "Confirm 2 EXPO tables in VC",
+        "Coordinate participating businesses",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter campaign",
+        "Social media campaign",
+        "Promotional materials to participating businesses",
+        "Coordinate radio LiVE Remote",
+      ]},
+      { title: "Marketing", items: [
+        "Press release",
+        "Radio LiVE Remote schedule",
+        "Social media all week",
+        "Email blast to membership",
+      ]},
+      { title: "Day-Of", items: [
+        "VC EXPO tables setup",
+        "Radio LiVE Remote on-site",
+        "Photos throughout day",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to LiVE Remote sponsor",
+        "Thank-you to participating businesses",
+        "Recap social campaign",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  // ============= DECEMBER =============
+  {
+    id: "gala-dec3", name: "10th Grand Marshal Gala", date: "2026-12-03",
+    time: "5:30 – 9:00 PM", venue: "Grand Highland Hotel — Ballroom",
+    contact: "Jeanne Murphy (928-202-3032, Jeanne@grandhighlandhotel.com)",
+    sponsors: "Bar: Bucky's | Floral $300 | Entertainment $500 | Keepsake $500",
+    type: "gala", emoji: "🎩",
+    note: "MAJOR EVENT. Working team: ALL HANDS ON DECK.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Confirm Ballroom booking + BEO/Event contract",
+        "Confirm room capacity + layout",
+        "AV service booked",
+        "Bar partnership: Bucky's confirmed",
+        "Founding Fathers bar coordination",
+        "Menu choice: house menu or caterer",
+        "Get Final headcount deadline from Debbie Maranville (Goods for the Garden)",
+        "Set up + tear down windows",
+        "Staff arrival time confirmed",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Confirm ALL sponsorships",
+        "Design invitations",
+        "Open reservations through chamber website (sponsors first — Sheri)",
+        "Newsletter #1",
+        "Secure photographer (Bob)",
+        "Secure videographer (Robert)",
+        "Sound system + holiday music plan",
+        "Event lighting designer",
+        "Confirm Emcee (Sanford)",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Script + Agenda to: staff, all participants, MC, sound system",
+        "Video presentation in production",
+        "Centerpieces ordered (Mortimer's / Watters Garden donation request)",
+        "Table reserved signs",
+        "Final headcount approaching deadline",
+      ]},
+      { title: "Venue & Logistics", items: [
+        "BEO / Event Contract on file",
+        "Room capacity + layout final",
+        "AV service confirmed",
+        "Reserved tables",
+        "Bar setup (Bucky's + Founding Fathers)",
+        "Menu finalized",
+        "Set up + tear down schedule",
+        "Staff arrival",
+      ]},
+      { title: "Sponsors", items: [
+        "Bucky's (Bar)",
+        "Floral $300",
+        "Entertainment $500",
+        "Keepsake $500",
+        "Sponsor recognition in program",
+      ]},
+      { title: "Production", items: [
+        "Photographer Bob confirmed",
+        "Videographer Robert confirmed",
+        "Sound system + holiday music",
+        "Event lighting placed",
+        "Sanford emcee briefed",
+        "Script to all participants",
+        "Video presentation final",
+      ]},
+      { title: "Reservations", items: [
+        "Reservations open on website",
+        "Sponsors get first pick (Sheri)",
+        "Individual + table sales tracked",
+        "Final headcount sent to venue by deadline",
+      ]},
+      { title: "Day-Of Materials", items: [
+        "Centerpieces placed",
+        "Table reserved signs",
+        "Welcome table setup",
+        "Grand Marshal bio + photos at guest table",
+        "Bring Event Box",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival (early — major event)",
+        "AV sound check",
+        "Bar setup",
+        "Welcome table ready",
+        "Reception → Dinner → Recognition → Closing",
+        "Photographer + videographer in position",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to Grand Highland / Jeanne",
+        "Thank-you to all sponsors",
+        "Thank-you to Bob (photographer) + Robert (videographer)",
+        "Send Grand Marshal photos + video",
+        "Thank-you to Sanford",
+        "Press release recap",
+        "Survey",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "parade-dec5", name: "44th Annual Christmas Parade", date: "2026-12-05",
+    time: "1:00 – 3:00 PM", venue: "Downtown Courthouse Plaza",
+    contact: "Crystal Stewart — 928-445-2000",
+    sponsors: "AZ Christmas City",
+    type: "parade", emoji: "🎄",
+    note: "Same day as Courthouse Lighting (6 PM). ALL HANDS ON DECK.",
+    sections: [
+      { title: "🗓️ 90 Days Out", items: [
+        "Open parade entry application",
+        "Coordinate with City of Prescott (route, permits)",
+        "Coordinate with PD on traffic/safety",
+        "Confirm AZ Christmas City sponsor",
+      ]},
+      { title: "🗓️ 60 Days Out", items: [
+        "Newsletter call for parade entries",
+        "Social media campaign starts",
+        "Confirm Grand Marshal",
+        "Order trophies/awards for parade categories",
+        "Coordinate judges",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter #2",
+        "Parade entry deadline + final lineup",
+        "Send participant info packets",
+        "Coordinate staging area assignments",
+        "Volunteer schedule",
+      ]},
+      { title: "Logistics", items: [
+        "Route permits secured",
+        "Staging area assignments to all entrants",
+        "PD traffic plan confirmed",
+        "Judge stations setup",
+        "Award trophies on hand",
+        "Volunteer t-shirts/badges",
+        "PA system for announcer",
+      ]},
+      { title: "Marketing", items: [
+        "Press release (announces Grand Marshal)",
+        "Social media campaign all week",
+        "Newsletter",
+        "Local news coverage",
+      ]},
+      { title: "Day-Of", items: [
+        "Staff arrival 10:00 AM (early — major)",
+        "Volunteer check-in",
+        "Staging area setup",
+        "Judge stations setup",
+        "Parade lineup 12:00",
+        "Parade starts 1:00",
+        "Awards ceremony at conclusion",
+        "Photos (Matt) + photographer",
+      ]},
+      { title: "Post-Event", items: [
+        "Quick turnaround → Courthouse Lighting at 6 PM",
+        "Thank-you to City + PD",
+        "Thank-you to AZ Christmas City",
+        "Thank-you to Grand Marshal",
+        "Thank-you to volunteers + judges",
+        "Press release recap",
+        "Debrief notes",
+      ]},
+    ],
+  },
+
+  {
+    id: "lighting-dec5", name: "72nd Annual Courthouse Lighting", date: "2026-12-05",
+    time: "6:00 – 7:30 PM", venue: "Downtown Courthouse Plaza",
+    contact: "Crystal Stewart — 928-445-2001",
+    sponsors: "AZ Christmas City",
+    type: "community-event", emoji: "💡",
+    note: "Same day as Christmas Parade. Working team: Sheri, Crystal, Marie, Matt.",
+    sections: [
+      { title: "🗓️ 60 Days Out", items: [
+        "Confirm date / time with City",
+        "Coordinate with City Public Works on lighting",
+        "Confirm AZ Christmas City sponsor",
+      ]},
+      { title: "🗓️ 30 Days Out", items: [
+        "Newsletter promotion",
+        "Social media campaign",
+        "Coordinate ceremony program / speakers",
+        "Confirm Mayor or City rep for lighting button",
+        "Hot chocolate / cookies coordinator",
+      ]},
+      { title: "Logistics", items: [
+        "Lighting installation (City Public Works)",
+        "Sound system + mic for ceremony",
+        "Hot chocolate + cookies station",
+        "Carolers / music booked",
+        "Photo spot setup",
+      ]},
+      { title: "Marketing", items: [
+        "Listed on prescott.org",
+        "Social media all week",
+        "Newsletter",
+        "Local news",
+      ]},
+      { title: "Day-Of", items: [
+        "Setup 4:00 PM (right after parade)",
+        "Sound check",
+        "Crowd gathering 5:30",
+        "Welcome + ceremony 6:00",
+        "Lighting moment 6:15",
+        "Carolers + community time",
+        "Photos (Matt)",
+      ]},
+      { title: "Post-Event", items: [
+        "Thank-you to City Public Works",
+        "Thank-you to AZ Christmas City",
+        "Thank-you to Mayor / officials",
+        "Photos to social",
+        "Debrief notes",
+      ]},
+    ],
+  },
+];
+
+// ============================================================================
+// STORAGE LAYER
+// ============================================================================
+const STORAGE_KEY = 'chamberhq_v1';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {
+    tasks: SEED_TASKS.map(t => ({ ...t, custom: false, done: false })),
+    events: SEED_EVENTS.map(e => ({
+      ...e,
+      itemStates: {},        // { "section_idx_item_idx": true/false }
+      customItems: {},       // { "section_idx": [extra items] }
+      hidden: false,
+    })),
+    customTaskIds: [],
+    nextTaskId: 1000,
+    nextItemId: 10000,
+  };
+}
+
+let state = loadState();
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    showToast("⚠️ Storage error — try freeing space");
+  }
+}
+
+// ============================================================================
+// UI
+// ============================================================================
+let activeView = 'tasks';
+let activeTaskTab = 'today';
+let openChecklistId = null;
+
+function setView(view) {
+  activeView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelector(`.nav-btn[data-view="${view}"]`)?.classList.add('active');
+
+  const titles = {
+    tasks: { t: '🚨 Priority Tasks', s: formatToday() },
+    events: { t: '📋 Event Checklists', s: 'Tap an event to open its checklist' },
+    checklist: { t: '📋 Checklist', s: '' },
+    calendar: { t: '📅 Calendar', s: 'Upcoming events' },
+    contacts: { t: '👥 Contacts', s: 'Staff, key externals & vendors' },
+    settings: { t: '⚙️ Settings', s: 'Backup, restore, install' },
+  };
+  const v = view === 'checklist' && openChecklistId ? 'checklist' : view;
+  document.getElementById('page-title').textContent = titles[v].t;
+  document.getElementById('page-sub').textContent = titles[v].s;
+
+  document.getElementById('fab').style.display =
+    (view === 'tasks' || view === 'events') ? 'flex' : 'none';
+
+  if (view === 'tasks') renderTasks();
+  if (view === 'events') renderEvents();
+  if (view === 'calendar') renderCalendar();
+  if (view === 'contacts') renderContacts();
+  window.scrollTo(0, 0);
+}
+
+function formatToday() {
+  return new Date().toLocaleDateString('en-US', {
+    weekday: 'long', month: 'long', day: 'numeric',
+  });
+}
+
+// === TASK RENDERING ===
+const TASK_TABS = [
+  { id: 'today', label: '🔴 Today' },
+  { id: 'week', label: '🟠 This Week' },
+  { id: 'next', label: '🟡 Next Week' },
+  { id: 'soon', label: '⚪ Later' },
+  { id: 'all', label: 'All' },
+  { id: 'custom', label: '✨ Mine' },
+];
+
+function renderTasks() {
+  // stats
+  const today = state.tasks.filter(t => t.priority === 'today' && !t.done).length;
+  const week = state.tasks.filter(t => t.priority === 'week' && !t.done).length;
+  const next = state.tasks.filter(t => t.priority === 'next' && !t.done).length;
+  const done = state.tasks.filter(t => t.done).length;
+  document.getElementById('stat-today').textContent = today;
+  document.getElementById('stat-week').textContent = week;
+  document.getElementById('stat-next').textContent = next;
+  document.getElementById('stat-done').textContent = done;
+
+  // tabs
+  const tabsEl = document.getElementById('task-tabs');
+  tabsEl.innerHTML = TASK_TABS.map(t => {
+    let count;
+    if (t.id === 'all') count = state.tasks.filter(x => !x.done).length;
+    else if (t.id === 'custom') count = state.tasks.filter(x => x.custom && !x.done).length;
+    else count = state.tasks.filter(x => x.priority === t.id && !x.done).length;
+    return `<button class="tab ${activeTaskTab === t.id ? 'active' : ''}" onclick="setTaskTab('${t.id}')">${t.label}<span class="count">${count}</span></button>`;
+  }).join('');
+
+  // list
+  const q = document.getElementById('task-search').value.toLowerCase().trim();
+  let list = state.tasks.slice();
+  if (activeTaskTab === 'custom') list = list.filter(t => t.custom);
+  else if (activeTaskTab !== 'all') list = list.filter(t => t.priority === activeTaskTab);
+  if (q) list = list.filter(t =>
+    [t.title, t.meta, t.detail, t.event].join(' ').toLowerCase().includes(q)
+  );
+
+  const groups = { today: [], week: [], next: [], soon: [], done: [] };
+  list.forEach(t => {
+    const k = t.done ? 'done' : t.priority;
+    (groups[k] || groups.soon).push(t);
+  });
+
+  const labels = { today: '🔴 Do Today', week: '🟠 This Week', next: '🟡 Next Week', soon: '⚪ Later / Whenever', done: '✅ Done' };
+  let html = '';
+  ['today','week','next','soon','done'].forEach(g => {
+    if (!groups[g].length) return;
+    html += `<div class="section-title">${labels[g]} — ${groups[g].length}</div>`;
+    groups[g].forEach(t => { html += renderTaskCard(t); });
+  });
+
+  const el = document.getElementById('task-list');
+  if (!html) {
+    el.innerHTML = `<div class="empty"><span class="emoji">✨</span>Nothing here. Either you crushed it or your filter is too tight.</div>`;
+  } else {
+    el.innerHTML = html;
+  }
+}
+
+function renderTaskCard(t) {
+  const pClass = t.done ? 'done' : t.priority;
+  const pLabel = t.done ? 'Done' : (t.priority === 'today' ? 'Today' : t.priority === 'week' ? 'This Week' : t.priority === 'next' ? 'Next Week' : 'Later');
+  return `
+    <div class="task priority-${pClass}" id="task-${t.id}">
+      <div class="task-row">
+        <div class="checkbox ${t.done ? 'checked' : ''}" onclick="toggleTask('${t.id}')"></div>
+        <div class="task-body">
+          <div class="badges">
+            <span class="badge ${pClass}">${pLabel}</span>
+            ${t.event ? `<span class="badge event">${escapeHtml(t.event)}</span>` : ''}
+            ${t.tool ? `<span class="badge tool">${escapeHtml(t.tool)}</span>` : ''}
+            ${t.custom ? `<span class="badge custom">✨ Mine</span>` : ''}
+          </div>
+          <div class="title">${escapeHtml(t.title)}</div>
+          ${t.meta ? `<div class="meta">${escapeHtml(t.meta)}</div>` : ''}
+          ${t.detail ? `
+            <button class="expand" onclick="toggleExpand('${t.id}', this)">Show details ↓</button>
+            <div class="detail">${escapeHtml(t.detail)}</div>` : ''}
+          <div class="actions">
+            <button class="edit-btn" onclick="editTask('${t.id}')">✏️ Edit</button>
+            ${t.custom ? `<button class="del-btn" onclick="deleteTask('${t.id}')">🗑 Delete</button>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function setTaskTab(id) { activeTaskTab = id; renderTasks(); }
+function toggleTask(id) {
+  const t = state.tasks.find(x => x.id === id);
+  if (t) { t.done = !t.done; saveState(); renderTasks(); }
+}
+function toggleExpand(id, btn) {
+  const card = document.getElementById('task-' + id);
+  card.classList.toggle('expanded');
+  btn.textContent = card.classList.contains('expanded') ? 'Hide details ↑' : 'Show details ↓';
+}
+function deleteTask(id) {
+  if (!confirm('Delete this task?')) return;
+  state.tasks = state.tasks.filter(t => t.id !== id);
+  saveState(); renderTasks(); showToast('Deleted');
+}
+function editTask(id) {
+  const t = state.tasks.find(x => x.id === id);
+  if (!t) return;
+  openTaskModal(t);
+}
+
+// === EVENTS RENDERING ===
+function renderEvents() {
+  const q = document.getElementById('event-search').value.toLowerCase().trim();
+  let list = state.events.filter(e => !e.hidden).slice();
+  if (q) list = list.filter(e =>
+    [e.name, e.venue, e.note, e.contact].filter(Boolean).join(' ').toLowerCase().includes(q)
+  );
+  list.sort((a,b) => a.date.localeCompare(b.date));
+
+  const today = new Date().toISOString().slice(0,10);
+  let html = '';
+  list.forEach(e => {
+    const total = countAllItems(e);
+    const done = countDoneItems(e);
+    const pct = total > 0 ? Math.round((done/total)*100) : 0;
+    const past = e.date < today;
+    html += `
+      <div class="event-card" onclick="openChecklist('${e.id}')" ${past ? 'style="opacity:0.55"' : ''}>
+        <div class="ev-date">${formatEventDate(e.date)}${past ? ' · PAST' : ''}</div>
+        <div class="ev-name">${e.emoji||'📋'} ${escapeHtml(e.name)}${e.custom ? ' <span class="badge custom" style="font-size:9px;margin-left:4px">✨</span>' : ''}</div>
+        <div class="ev-meta">${escapeHtml(e.venue||'')}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div>
+        <div class="ev-progress">
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div class="progress-text">${done}/${total} · ${pct}%</div>
+        </div>
+      </div>`;
+  });
+  if (!html) html = `<div class="empty"><span class="emoji">📋</span>No events found.</div>`;
+  document.getElementById('event-list').innerHTML = html;
+}
+
+function formatEventDate(d) {
+  const dt = new Date(d + 'T12:00:00');
+  return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function countAllItems(e) {
+  let n = 0;
+  e.sections.forEach((s, sIdx) => {
+    n += s.items.length;
+    if (e.customItems[sIdx]) n += e.customItems[sIdx].length;
+  });
+  return n;
+}
+function countDoneItems(e) {
+  let n = 0;
+  e.sections.forEach((s, sIdx) => {
+    s.items.forEach((_, iIdx) => { if (e.itemStates[`${sIdx}_${iIdx}`]) n++; });
+    if (e.customItems[sIdx]) {
+      e.customItems[sIdx].forEach(it => { if (it.done) n++; });
+    }
+  });
+  return n;
+}
+
+// === CHECKLIST DETAIL ===
+function openChecklist(id) {
+  openChecklistId = id;
+  setView('checklist');
+  renderChecklist();
+}
+
+function renderChecklist() {
+  const e = state.events.find(x => x.id === openChecklistId);
+  if (!e) { setView('events'); return; }
+  document.getElementById('page-title').textContent = `${e.emoji||'📋'} ${e.name}`;
+  document.getElementById('page-sub').textContent = formatEventDate(e.date);
+
+  const total = countAllItems(e);
+  const done = countDoneItems(e);
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  let html = `
+    <div class="checklist-header">
+      <button class="back-btn" onclick="setView('events')">← All Events</button>
+      <h2>${e.emoji||''} ${escapeHtml(e.name)}</h2>
+      <div class="ch-meta">
+        <strong>📅 ${formatEventDate(e.date)}</strong>${e.time ? ' · ' + escapeHtml(e.time) : ''}<br>
+        ${e.venue ? '<strong>📍</strong> ' + escapeHtml(e.venue) + '<br>' : ''}
+        ${e.address ? '<span style="font-size:12px;color:var(--muted)">' + escapeHtml(e.address) + '</span><br>' : ''}
+        ${e.contact ? '<strong>📞</strong> ' + escapeHtml(e.contact) + '<br>' : ''}
+        ${e.speaker ? '<strong>🎤 Speaker:</strong> ' + escapeHtml(e.speaker) + '<br>' : ''}
+        ${e.emcee ? '<strong>🎤 Emcee:</strong> ' + escapeHtml(e.emcee) + '<br>' : ''}
+        ${e.sponsors ? '<strong>🤝 Sponsors:</strong> ' + escapeHtml(e.sponsors) + '<br>' : ''}
+        ${e.note ? '<div style="margin-top:8px;padding:8px 10px;background:var(--bg);border-left:3px solid var(--orange);border-radius:6px;font-size:12.5px;line-height:1.5">⚠️ ' + escapeHtml(e.note) + '</div>' : ''}
+      </div>
+      <div style="margin-top:12px"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div style="text-align:right;font-size:12px;color:var(--muted);font-weight:600;margin-top:4px">${done}/${total} complete · ${pct}%</div></div>
+    </div>`;
+
+  e.sections.forEach((sec, sIdx) => {
+    const isPrep = sec.title.includes('🗓️') || sec.title.includes('Days Out');
+    html += `<div class="checklist-section${isPrep ? ' prep' : ''}"><h3>${escapeHtml(sec.title)}</h3>`;
+    sec.items.forEach((item, iIdx) => {
+      const k = `${sIdx}_${iIdx}`;
+      const done = !!e.itemStates[k];
+      html += `
+        <div class="check-item ${done ? 'done' : ''}">
+          <div class="checkbox ${done ? 'checked' : ''}" onclick="toggleChecklistItem('${e.id}', ${sIdx}, ${iIdx})"></div>
+          <div class="ci-text">${escapeHtml(item)}</div>
+        </div>`;
+    });
+    if (e.customItems[sIdx]) {
+      e.customItems[sIdx].forEach((custItem, cIdx) => {
+        html += `
+          <div class="check-item ${custItem.done ? 'done' : ''}">
+            <div class="checkbox ${custItem.done ? 'checked' : ''}" onclick="toggleCustomItem('${e.id}', ${sIdx}, ${cIdx})"></div>
+            <div class="ci-text">${escapeHtml(custItem.text)} <span class="badge custom" style="font-size:9px">✨</span></div>
+            <button class="ci-del" onclick="deleteCustomItem('${e.id}', ${sIdx}, ${cIdx})">×</button>
+          </div>`;
+      });
+    }
+    html += `
+      <div class="add-item-row">
+        <input class="add-item-input" id="addinput_${sIdx}" placeholder="Add a custom task to this section…">
+        <button class="add-item-btn" onclick="addCustomItem('${e.id}', ${sIdx})">+ Add</button>
+      </div>`;
+    html += `</div>`;
+  });
+
+  document.getElementById('view-checklist').innerHTML = html;
+}
+
+function toggleChecklistItem(eid, sIdx, iIdx) {
+  const e = state.events.find(x => x.id === eid);
+  if (!e) return;
+  const k = `${sIdx}_${iIdx}`;
+  e.itemStates[k] = !e.itemStates[k];
+  saveState();
+  renderChecklist();
+}
+function toggleCustomItem(eid, sIdx, cIdx) {
+  const e = state.events.find(x => x.id === eid);
+  if (!e || !e.customItems[sIdx]) return;
+  e.customItems[sIdx][cIdx].done = !e.customItems[sIdx][cIdx].done;
+  saveState();
+  renderChecklist();
+}
+function addCustomItem(eid, sIdx) {
+  const e = state.events.find(x => x.id === eid);
+  if (!e) return;
+  const input = document.getElementById('addinput_' + sIdx);
+  const text = input.value.trim();
+  if (!text) return;
+  if (!e.customItems[sIdx]) e.customItems[sIdx] = [];
+  e.customItems[sIdx].push({ text, done: false });
+  saveState();
+  renderChecklist();
+  showToast('Added ✓');
+}
+function deleteCustomItem(eid, sIdx, cIdx) {
+  const e = state.events.find(x => x.id === eid);
+  if (!e || !e.customItems[sIdx]) return;
+  e.customItems[sIdx].splice(cIdx, 1);
+  if (e.customItems[sIdx].length === 0) delete e.customItems[sIdx];
+  saveState();
+  renderChecklist();
+}
+
+// === CONTACTS ===
+const CONTACTS_DATA = [
+  {
+    group: "🏢 Chamber Staff",
+    people: [
+      {
+        name: "Sheri Heiney",
+        role: "CEO",
+        initials: "SH",
+        phone: "928-445-2000",
+        note: "Lead on: Business Awards, Bluegrass, Flying High Turkey Drive, Christmas Parade, Courthouse Lighting. Go-to for: sponsor conflicts, policy calls, major event final decisions.",
+      },
+      {
+        name: "Crystal Stewart",
+        role: "Business Development Manager",
+        initials: "CS",
+        phone: "928-445-2000 x117",
+        note: "Art shows lead. Primary knowledge transfer source. Go-to for: vendor placement rules, Territorial details, JotForm questions, any 'is this right?' checks.",
+      },
+      {
+        name: "Ashly Gardikis",
+        role: "Events Manager (You)",
+        initials: "AG",
+        note: "Owns: all arts & crafts shows + Chamber events. Primary on: Off-Street, Territorial, Bluegrass, Labor Day, Fall Show, most Chamber events.",
+      },
+      {
+        name: "Matt Van Doren",
+        role: "Events Assistant",
+        initials: "MV",
+        note: "Photos (all events), CapCut post-processing, flyer design, social media scheduling. CC on all acceptance letters. Hotsheet coordination.",
+      },
+      {
+        name: "Glaucia Hernandez",
+        role: "Accounting Manager",
+        initials: "GH",
+        note: "JotForm admin access. Refund processing (booth fees). Financial questions. Route payment/refund issues here.",
+      },
+      {
+        name: "Robert Coombs",
+        role: "VIC Manager",
+        initials: "RC",
+        note: "Visitor & Information Center. VIC flyer distribution, visitor-facing promotions.",
+      },
+      {
+        name: "DJ Sheridan",
+        role: "Board Chair",
+        initials: "DJ",
+        note: "2026 Board Chair.",
+      },
+    ],
+  },
+  {
+    group: "🏛️ Permits & Regulatory",
+    people: [
+      {
+        name: "Jasmine Menna",
+        role: "County Special Events — Primary Contact",
+        initials: "JM",
+        avatarClass: "key",
+        note: "Primary for ALL county special event permits. Required walkthrough partner for art shows. Send final food vendor lists here.",
+      },
+      {
+        name: "Michelle Stacey Schroeder",
+        role: "City Special Events — E-TRAKiT Portal",
+        initials: "MS",
+        avatarClass: "key",
+        note: "City of Prescott special events permits. Use E-TRAKiT portal for submissions. Contact for: Christmas Parade route, Courthouse Plaza events.",
+      },
+      {
+        name: "Sally Shelby",
+        role: "Yavapai County Health Dept.",
+        initials: "SS",
+        avatarClass: "ext",
+        phone: "928-442-5510",
+        note: "Food vendor health permits for ALL art shows. Send final food vendor list 2 weeks before each show. Required for: Off-Street, Territorial, Bluegrass, Labor Day, Fall Show.",
+      },
+    ],
+  },
+  {
+    group: "🤝 Key Venue & Partner Contacts",
+    people: [
+      {
+        name: "Brenda Smull",
+        role: "Special Affairs — American Legion Post 6",
+        initials: "BS",
+        avatarClass: "ext",
+        note: "Vets Connect May 4 venue host. Coordinate refreshments + room setup through her.",
+      },
+      {
+        name: "Tamara Burks",
+        role: "GM — Hilton Garden Inn / Sam Hill Warehouse",
+        initials: "TB",
+        avatarClass: "ext",
+        phone: "928-515-3422",
+        email: "tamara.burks@hilton.com",
+        note: "Women in Business Luncheon venue contact (both May + November events). Walkthrough coordination.",
+      },
+      {
+        name: "Kelly Garashe",
+        role: "Espire Sports",
+        initials: "KG",
+        avatarClass: "ext",
+        phone: "928-458-0260",
+        email: "kellyg@espiresports.com",
+        note: "Venue contact for: Chamber Spotlight (May), Community Pulse (Aug), Salute to Educators (Sep). Banquet Room bookings.",
+      },
+      {
+        name: "Kelli Welch",
+        role: "Club at Prescott Lakes — VERIFY new Event Mgr",
+        initials: "KW",
+        avatarClass: "ext",
+        phone: "928-443-3523",
+        note: "⚠️ Confirm replacement Event Manager / F&B Director for 2026. Used for: Coffee Connect (July), Vets Connect EXPO (Aug). Do not assume Kelli is still the contact.",
+      },
+      {
+        name: "Grant Quezeda",
+        role: "Founding Fathers Collective",
+        initials: "GQ",
+        avatarClass: "ext",
+        phone: "928-460-7317",
+        email: "grant@foundingfatherscollective.com",
+        note: "Men's Business Breakfast (July) venue contact — SpeakEasy room.",
+      },
+      {
+        name: "Joe Brown / Brooklyn Sanchez",
+        role: "Touchmark — Charley's Restaurant",
+        initials: "JB",
+        avatarClass: "ext",
+        phone: "928-632-7800",
+        note: "New Member Breakfast (September) venue contacts.",
+      },
+      {
+        name: "Edd Kellerman",
+        role: "Phippen Museum",
+        initials: "EK",
+        avatarClass: "ext",
+        phone: "928-778-1385",
+        email: "edd@phippenartmuseum.org",
+        note: "Vets Connect November venue contact.",
+      },
+      {
+        name: "Jeanne Murphy",
+        role: "Grand Highland Hotel",
+        initials: "JM",
+        avatarClass: "ext",
+        phone: "928-202-3032",
+        email: "Jeanne@grandhighlandhotel.com",
+        note: "Grand Marshal Gala (Dec 3) venue contact — Ballroom.",
+      },
+      {
+        name: "Stacey Rathbone",
+        role: "Prescott Resort Hotel",
+        initials: "SR",
+        avatarClass: "ext",
+        phone: "928-776-5699",
+        note: "Prescott Business Awards (Oct 29) — Gold Water Ballroom.",
+      },
+      {
+        name: "Anji Rodarte",
+        role: "Pine Ridge Marketplace",
+        initials: "AR",
+        avatarClass: "key",
+        phone: "714-262-6508",
+        email: "anji@retailmarketingroup.com",
+        note: "⚠️ SENSITIVE: Pine Ridge partnership — deal through Anji ONLY. Do NOT escalate to ownership. If issues, route through Glossia. Used for: Tree Lighting (Nov 24), Shop Small (Nov 28).",
+      },
+      {
+        name: "Callie Printz",
+        role: "Cutter Aviation",
+        initials: "CP",
+        avatarClass: "ext",
+        phone: "928-515-3654",
+        email: "cprintz@cutteraviation.com",
+        note: "Networking@Nite July venue contact.",
+      },
+      {
+        name: "Karrigan Karcie",
+        role: "The Barley Hound (Vivili Group)",
+        initials: "KK",
+        avatarClass: "ext",
+        phone: "480-300-1648",
+        email: "kkarcie@viviligroup.com",
+        note: "Networking@Nite October venue contact — Rear Patio.",
+      },
+      {
+        name: "Josh Makerur",
+        role: "Jersey Lily Saloon",
+        initials: "JM",
+        avatarClass: "ext",
+        phone: "928-541-7854",
+        email: "whiskeyrllc@gmail.com",
+        note: "Friends of Jersey Lilly Auction (Nov 5). We support — not our event.",
+      },
+    ],
+  },
+  {
+    group: "🎓 Education Partners",
+    people: [
+      {
+        name: "Dr. Pavel Cenkl",
+        role: "Dean of Academic Affairs — Prescott College",
+        initials: "PC",
+        avatarClass: "key",
+        note: "Prescott College host contact for chamber events/partnerships.",
+      },
+      {
+        name: "Dr. Kenneth Witcher",
+        role: "Chancellor — Embry-Riddle Aeronautical University",
+        initials: "KW",
+        avatarClass: "key",
+        note: "ERAU host contact for chamber events/partnerships.",
+      },
+      {
+        name: "Breeanya Hinkle",
+        role: "BBB Executive Director",
+        initials: "BH",
+        avatarClass: "ext",
+        note: "Better Business Bureau. Partnership + co-event coordination contact.",
+      },
+    ],
+  },
+];
+
+function renderContacts() {
+  let html = '';
+  CONTACTS_DATA.forEach(group => {
+    html += `<div class="contacts-group"><h3>${escapeHtml(group.group)}</h3>`;
+    group.people.forEach(p => {
+      const initials = p.initials || p.name.split(' ').map(w=>w[0]).join('').slice(0,2);
+      const avatarClass = p.avatarClass || '';
+      html += `
+        <div class="contact-row">
+          <div class="contact-avatar ${avatarClass}">${escapeHtml(initials)}</div>
+          <div class="contact-info">
+            <div class="contact-name">${escapeHtml(p.name)}</div>
+            <div class="contact-role">${escapeHtml(p.role)}</div>
+            <div class="contact-actions">
+              ${p.phone ? `<a class="contact-link phone" href="tel:${p.phone.replace(/[^0-9]/g,'')}">📞 ${escapeHtml(p.phone)}</a>` : ''}
+              ${p.email ? `<a class="contact-link email" href="mailto:${escapeHtml(p.email)}">✉️ Email</a>` : ''}
+            </div>
+            ${p.note ? `<div class="contact-note">${escapeHtml(p.note)}</div>` : ''}
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('contacts-list').innerHTML = html;
+}
+
+// === CALENDAR ===
+function renderCalendar() {
+  const today = new Date().toISOString().slice(0,10);
+  const upcoming = state.events.filter(e => !e.hidden && e.date >= today)
+                               .sort((a,b) => a.date.localeCompare(b.date));
+  const months = {};
+  upcoming.forEach(e => {
+    const m = e.date.slice(0,7);
+    if (!months[m]) months[m] = [];
+    months[m].push(e);
+  });
+  let html = '';
+  Object.keys(months).sort().forEach(m => {
+    const dt = new Date(m + '-15T12:00:00');
+    const label = dt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    html += `<div class="cal-month"><h3>${label}</h3>`;
+    months[m].forEach(e => {
+      const d = new Date(e.date + 'T12:00:00');
+      const isArt = e.type === 'art-show';
+      const isMajor = ['gala','awards','parade'].includes(e.type);
+      html += `
+        <div class="cal-event ${isArt ? 'art' : ''} ${isMajor ? 'major' : ''}" onclick="openChecklist('${e.id}')">
+          <div class="ce-date"><div class="day">${d.getDate()}</div><div class="mo">${d.toLocaleDateString('en-US',{month:'short'})}</div></div>
+          <div style="flex:1;min-width:0">
+            <div class="ce-name">${e.emoji||''} ${escapeHtml(e.name)}</div>
+            <div class="ce-time">${escapeHtml(e.time||'')}${e.venue ? ' · ' + escapeHtml(e.venue) : ''}</div>
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  if (!html) html = `<div class="empty"><span class="emoji">📅</span>No upcoming events.</div>`;
+  document.getElementById('calendar-list').innerHTML = html;
+}
+
+// === MODAL (Add/Edit) ===
+function openTaskModal(task) {
+  const isEdit = !!task;
+  const t = task || { id: '', title: '', meta: '', detail: '', priority: 'today', event: '', tool: '', custom: true, done: false };
+  document.getElementById('modal-title').textContent = isEdit ? 'Edit Task' : 'Add Task';
+  document.getElementById('modal-body').innerHTML = `
+    <label>Title</label>
+    <input id="m-title" value="${escapeAttr(t.title)}" placeholder="What needs doing?">
+    <label>Priority</label>
+    <select id="m-priority">
+      <option value="today" ${t.priority==='today'?'selected':''}>🔴 Today</option>
+      <option value="week" ${t.priority==='week'?'selected':''}>🟠 This Week</option>
+      <option value="next" ${t.priority==='next'?'selected':''}>🟡 Next Week</option>
+      <option value="soon" ${t.priority==='soon'?'selected':''}>⚪ Later</option>
+    </select>
+    <label>Event (optional)</label>
+    <input id="m-event" value="${escapeAttr(t.event||'')}" placeholder="Bluegrass, Territorial, etc.">
+    <label>Tool / Channel (optional)</label>
+    <input id="m-tool" value="${escapeAttr(t.tool||'')}" placeholder="Phone, Email, JotForm…">
+    <label>Quick context (optional)</label>
+    <input id="m-meta" value="${escapeAttr(t.meta||'')}" placeholder="Contact, brief note…">
+    <label>Full details (optional)</label>
+    <textarea id="m-detail" placeholder="Script, full context, why this matters…">${escapeHtml(t.detail||'')}</textarea>
+  `;
+  document.getElementById('modal-save').onclick = () => {
+    const title = document.getElementById('m-title').value.trim();
+    if (!title) { showToast('Title is required'); return; }
+    const data = {
+      title,
+      priority: document.getElementById('m-priority').value,
+      event: document.getElementById('m-event').value.trim(),
+      tool: document.getElementById('m-tool').value.trim(),
+      meta: document.getElementById('m-meta').value.trim(),
+      detail: document.getElementById('m-detail').value.trim(),
+    };
+    if (isEdit) {
+      Object.assign(t, data);
+    } else {
+      const id = 'c' + (state.nextTaskId++);
+      state.tasks.unshift({ id, ...data, custom: true, done: false });
+    }
+    saveState(); closeModal(); renderTasks();
+    showToast(isEdit ? 'Saved ✓' : 'Added ✓');
+  };
+  document.getElementById('modal').classList.add('show');
+}
+
+function openEventModal() {
+  document.getElementById('modal-title').textContent = 'Add Custom Event';
+  document.getElementById('modal-body').innerHTML = `
+    <label>Event name</label>
+    <input id="m-name" placeholder="e.g. Ribbon Cutting at Touchmark">
+    <label>Date</label>
+    <input id="m-date" type="date">
+    <label>Time</label>
+    <input id="m-time" placeholder="e.g. 10:00 AM – 11:00 AM">
+    <label>Venue</label>
+    <input id="m-venue" placeholder="Where">
+    <label>Contact</label>
+    <input id="m-contact" placeholder="Who to coordinate with">
+    <label>Note (optional)</label>
+    <textarea id="m-note" placeholder="Anything special about this event"></textarea>
+  `;
+  document.getElementById('modal-save').onclick = () => {
+    const name = document.getElementById('m-name').value.trim();
+    const date = document.getElementById('m-date').value;
+    if (!name || !date) { showToast('Name and date required'); return; }
+    const id = 'cev' + (state.nextTaskId++);
+    state.events.push({
+      id, name, date,
+      time: document.getElementById('m-time').value.trim(),
+      venue: document.getElementById('m-venue').value.trim(),
+      contact: document.getElementById('m-contact').value.trim(),
+      note: document.getElementById('m-note').value.trim(),
+      type: 'custom', emoji: '✨',
+      custom: true,
+      sections: [
+        { title: 'Venue & Logistics', items: [] },
+        { title: 'Marketing', items: [] },
+        { title: 'Day-Of', items: [] },
+        { title: 'Post-Event', items: [] },
+      ],
+      itemStates: {}, customItems: {}, hidden: false,
+    });
+    saveState(); closeModal(); renderEvents();
+    showToast('Event added ✓');
+  };
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+// === BACKUP ===
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `chamberhq-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Backup downloaded ✓');
+}
+function importData() {
+  document.getElementById('import-file').click();
+}
+document.getElementById('import-file').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.tasks || !data.events) throw new Error('Invalid backup');
+      if (!confirm('This will REPLACE your current data. Continue?')) return;
+      state = data;
+      saveState();
+      setView(activeView);
+      showToast('Imported ✓');
+    } catch (err) {
+      showToast('Invalid backup file');
+    }
+  };
+  reader.readAsText(f);
+});
+
+function resetChecks() {
+  if (!confirm('Uncheck ALL completed tasks and checklist items? Custom tasks/items remain.')) return;
+  state.tasks.forEach(t => t.done = false);
+  state.events.forEach(e => {
+    e.itemStates = {};
+    Object.values(e.customItems).forEach(arr => arr.forEach(i => i.done = false));
+  });
+  saveState();
+  setView(activeView);
+  showToast('All checks cleared');
+}
+
+function resetAll() {
+  if (!confirm('FACTORY RESET: this removes all your custom tasks, custom checklist items, and check-offs. Restores defaults. CONTINUE?')) return;
+  if (!confirm('Really? This cannot be undone (unless you have a backup).')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = loadState();
+  saveState();
+  setView('tasks');
+  showToast('Reset to defaults');
+}
+
+// === UTIL ===
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// === EVENT BINDINGS ===
+document.querySelectorAll('.nav-btn').forEach(b => {
+  b.addEventListener('click', () => setView(b.dataset.view));
+});
+document.getElementById('task-search').addEventListener('input', renderTasks);
+document.getElementById('event-search').addEventListener('input', renderEvents);
+document.getElementById('fab').addEventListener('click', () => {
+  if (activeView === 'tasks') openTaskModal(null);
+  else if (activeView === 'events') openEventModal();
+});
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') closeModal();
+});
+
+// === BOOT ===
+setView('tasks');
+</script>
+</body>
+</html>

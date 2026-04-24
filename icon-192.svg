@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#1F4E78"/>
+  <text x="96" y="80" font-size="38" text-anchor="middle" font-family="sans-serif" font-weight="800" fill="white">CH</text>
+  <text x="96" y="120" font-size="18" text-anchor="middle" font-family="sans-serif" font-weight="600" fill="rgba(255,255,255,0.75)">PRESCOTT</text>
+  <text x="96" y="142" font-size="14" text-anchor="middle" font-family="sans-serif" font-weight="600" fill="rgba(255,255,255,0.6)">CHAMBER</text>
+</svg>
