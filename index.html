@@ -431,6 +431,183 @@
     padding: 5px 8px; background: var(--bg); border-radius: 5px; line-height: 1.4;
   }
 
+  .tab.urgent-tab { border-color: #C0392B !important; color: #C0392B !important; }
+  .tab.urgent-tab .count { background: #C0392B; color: white; }
+  /* --- OVERDUE TASK STYLE --- */
+  .priority-overdue { border-left-color: #C0392B !important; background: #FFF5F5 !important; }
+  .badge.overdue { background: #C0392B; color: white; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.65} }
+  .task-due-date { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+  .task-due-date.overdue-label { color: #C0392B; font-weight: 700; }
+
+  /* --- 7-button nav: smaller labels on narrow screens --- */
+  .bottom-nav { gap: 0; }
+  .bottom-nav .nav-btn { min-width: 0; padding: 8px 2px 4px; flex: 1; }
+  .bottom-nav .nav-btn .lbl { font-size: 8.5px; }
+  .bottom-nav .nav-btn .icon { font-size: 18px; }
+
+  /* --- TEMPLATES --- */
+  .tpl-card {
+    background: var(--card); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 10px; border: 1px solid var(--border); box-shadow: var(--shadow);
+    cursor: pointer; transition: box-shadow 0.15s;
+  }
+  .tpl-card:active { box-shadow: none; }
+  .tpl-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .tpl-emoji { font-size: 24px; line-height: 1; }
+  .tpl-name { font-size: 15px; font-weight: 800; color: var(--text); flex: 1; }
+  .tpl-meta { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+  .tpl-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .tpl-btn {
+    font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 8px;
+    border: none; cursor: pointer; transition: opacity 0.15s;
+  }
+  .tpl-btn:active { opacity: 0.7; }
+  .tpl-btn.primary { background: var(--navy); color: white; }
+  .tpl-btn.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .tpl-btn.danger { background: #FEE; color: #C0392B; border: 1px solid #F5C6C6; }
+  .tpl-section-list { margin-top: 8px; }
+  .tpl-section-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0; border-bottom: 1px solid var(--bg); font-size: 13px;
+  }
+  .tpl-section-item:last-child { border-bottom: none; }
+  .tpl-section-icon { font-size: 14px; flex-shrink: 0; }
+  .tpl-item-count { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+  /* Template detail / edit view */
+  .tpl-detail { padding-bottom: 80px; }
+  .tpl-detail-header {
+    background: var(--card); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 12px; border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .tpl-section-card {
+    background: var(--card); border-radius: 12px; padding: 12px 14px;
+    margin-bottom: 10px; border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .tpl-section-card h4 {
+    font-size: 12px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tpl-item-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0; border-bottom: 1px solid var(--bg); font-size: 13px;
+  }
+  .tpl-item-row:last-of-type { border-bottom: none; }
+  .tpl-item-del { border: none; background: none; color: #C0392B; font-size: 18px; cursor: pointer; padding: 0 4px; flex-shrink: 0; }
+  .tpl-add-row { display: flex; gap: 8px; margin-top: 8px; }
+  .tpl-add-row input { flex: 1; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+  .tpl-add-row button { font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 8px; border: none; background: var(--navy); color: white; cursor: pointer; }
+  .use-tpl-panel {
+    background: #EEF4FF; border: 1px solid #C8D9F5; border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 12px;
+  }
+  .use-tpl-panel h3 { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+  .use-tpl-panel label { font-size: 12px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px; margin-top: 8px; }
+  .use-tpl-panel input, .use-tpl-panel select, .use-tpl-panel textarea {
+    width: 100%; box-sizing: border-box; font-size: 13px; padding: 8px 10px;
+    border: 1px solid var(--border); border-radius: 8px; background: white; color: var(--text); margin-bottom: 2px;
+  }
+  .use-tpl-panel textarea { min-height: 50px; resize: vertical; }
+  .use-tpl-panel .field-hint { font-size: 10.5px; color: var(--muted); margin-bottom: 6px; font-style: italic; }
+
+  /* --- AGENDA BUILDER --- */
+  .agenda-card {
+    background: var(--card); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 10px; border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .agenda-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .agenda-status {
+    font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .agenda-status.draft { background: #FFF3CD; color: #856404; }
+  .agenda-status.final { background: #D1FAE5; color: #065F46; }
+  .agenda-name { font-size: 15px; font-weight: 800; flex: 1; }
+  .agenda-meta-line { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; }
+  .agenda-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .agenda-btn {
+    font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 8px;
+    border: none; cursor: pointer; transition: opacity 0.15s;
+  }
+  .agenda-btn:active { opacity: 0.7; }
+  .agenda-btn.primary { background: var(--navy); color: white; }
+  .agenda-btn.success { background: #065F46; color: white; }
+  .agenda-btn.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .agenda-btn.danger { background: #FEE; color: #C0392B; border: 1px solid #F5C6C6; }
+
+  /* Agenda form / detail */
+  .agenda-form { padding-bottom: 80px; }
+  .agenda-form-section {
+    background: var(--card); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 12px; border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .agenda-form-section h3 {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--muted); margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .agenda-field { margin-bottom: 12px; }
+  .agenda-field label { font-size: 12px; font-weight: 700; color: var(--text); display: block; margin-bottom: 4px; }
+  .agenda-field input, .agenda-field textarea, .agenda-field select {
+    width: 100%; box-sizing: border-box; font-size: 13px; padding: 8px 10px;
+    border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);
+  }
+  .agenda-field textarea { min-height: 60px; resize: vertical; }
+  .agenda-hint {
+    font-size: 11px; color: var(--navy); background: #EEF4FF;
+    border: 1px solid #C8D9F5; border-radius: 7px; padding: 6px 10px;
+    margin-top: 4px; line-height: 1.5;
+  }
+  .agenda-hint strong { display: block; margin-bottom: 2px; }
+
+  /* Finalized agenda output */
+  .agenda-output {
+    background: white; border-radius: 12px; padding: 20px;
+    margin-bottom: 12px; border: 2px solid var(--navy);
+    font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .agenda-output .ao-org {
+    text-align: center; font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: #7B2D3B;
+    margin-bottom: 4px; font-family: Arial, sans-serif;
+  }
+  .agenda-output .ao-title {
+    text-align: center; font-size: 18px; font-weight: 800;
+    color: #1F4E78; margin-bottom: 2px; font-family: Arial, sans-serif;
+  }
+  .agenda-output .ao-subtitle {
+    text-align: center; font-size: 12px; color: #555;
+    margin-bottom: 14px; font-family: Arial, sans-serif;
+  }
+  .agenda-output hr { border: none; border-top: 2px solid #7B2D3B; margin: 12px 0; }
+  .agenda-output .ao-meta {
+    font-size: 12px; color: #333; margin-bottom: 12px;
+    font-family: Arial, sans-serif; line-height: 1.7;
+  }
+  .agenda-output .ao-section-title {
+    font-size: 12px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; color: #7B2D3B; margin: 14px 0 6px;
+    font-family: Arial, sans-serif;
+  }
+  .agenda-output .ao-item {
+    display: flex; gap: 10px; font-size: 12px; margin-bottom: 6px;
+    font-family: Arial, sans-serif; align-items: flex-start;
+  }
+  .agenda-output .ao-time { min-width: 80px; font-weight: 700; color: #333; flex-shrink: 0; }
+  .agenda-output .ao-desc { flex: 1; line-height: 1.5; }
+  .agenda-output .ao-presenter { color: #1F4E78; font-weight: 700; }
+  .agenda-output .ao-footer {
+    text-align: center; font-size: 10px; color: #999; margin-top: 16px;
+    font-family: Arial, sans-serif; font-style: italic;
+  }
+  .agenda-print-bar {
+    display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+  }
+
   @media (max-width: 380px) {
     .stats { grid-template-columns: repeat(2, 1fr); }
   }
@@ -523,12 +700,24 @@
     <div id="contacts-list"></div>
   </div>
 
+  <!-- ============== TEMPLATES VIEW ============== -->
+  <div class="view" id="view-templates">
+    <div id="templates-list"></div>
+  </div>
+
+  <!-- ============== AGENDA VIEW ============== -->
+  <div class="view" id="view-agenda">
+    <div id="agenda-list"></div>
+  </div>
+
 </div>
 <nav class="bottom-nav">
   <button class="nav-btn active" data-view="tasks"><span class="icon">🚨</span><span class="lbl">Tasks</span></button>
   <button class="nav-btn" data-view="events"><span class="icon">📋</span><span class="lbl">Events</span></button>
   <button class="nav-btn" data-view="calendar"><span class="icon">📅</span><span class="lbl">Calendar</span></button>
   <button class="nav-btn" data-view="contacts"><span class="icon">👥</span><span class="lbl">Contacts</span></button>
+  <button class="nav-btn" data-view="templates"><span class="icon">🗂️</span><span class="lbl">Templates</span></button>
+  <button class="nav-btn" data-view="agenda"><span class="icon">📄</span><span class="lbl">Agendas</span></button>
   <button class="nav-btn" data-view="settings"><span class="icon">⚙️</span><span class="lbl">Settings</span></button>
 </nav>
 
@@ -577,114 +766,121 @@ document.getElementById('install-btn').addEventListener('click', async () => {
 // ============================================================================
 
 const SEED_TASKS = [
-  // BLUEGRASS — TODAY (Crystal transcript)
-  { id: "bg1", priority: "today", event: "Bluegrass", tool: "Phone",
+  // BLUEGRASS — marked DONE per Ashly 4/29/26
+  { id: "bg3", priority: "today", event: "Bluegrass", tool: "Email", dueDate: "2026-04-29",
+    title: "Email Kyle (organic popsicles) — accept + send JotForm link",
+    meta: "Kyle — new vendor, organic frozen popsicles",
+    detail: "Organic popsicles ≠ shaved ice, so Terry Magnett won't flip. Send Bluegrass JotForm application link. Place in available spot once app is in.",
+    _seedDone: true },
+  { id: "bg6", priority: "today", event: "Bluegrass", tool: "Sheets", dueDate: "2026-04-29",
+    title: "Add Reliable Portable Restrooms to Master Contact Directory",
+    meta: "Your Jaylin contact",
+    detail: "Not member, not local — can't use for Bluegrass this year. Add to master list for future when sponsor needs quick local vendors.",
+    _seedDone: true },
+  { id: "bg7", priority: "today", event: "Bluegrass", tool: "Drive", dueDate: "2026-04-29",
+    title: "Pull 2025 Bluegrass acceptance letter template — update for 2026",
+    meta: "Bluegrass folder → vendors",
+    detail: "Crystal: 'Pull from 2025, update them all, then you're ready.' Update year, dates, booth #, your signature.",
+    _seedDone: true },
+  { id: "bg8", priority: "today", event: "Bluegrass", tool: "Email", dueDate: "2026-04-29",
+    title: "Send acceptance letters to all PLACED Bluegrass vendors EXCEPT Theresa Fenn",
+    meta: "14 vendors in JotForm sheet",
+    detail: "Crystal: 'Immediately start sending acceptance letters.' CC Matt on each. HOLD Theresa Fenn until booth sorted.",
+    _seedDone: true },
+  { id: "bg1", priority: "today", event: "Bluegrass", tool: "Phone", dueDate: "2026-04-29",
     title: "Call back Laura Quan once she returns voicemail",
     meta: "(928) 273-1816 • lqgemworks@gmail.com",
-    detail: "She's in-and-out, doesn't f-around. Voicemail left asking which booth she wants. Cannot be on the curve with Martin (bubble rave going there). Available Bluegrass spots: 9 and 15." },
-  { id: "bg2", priority: "today", event: "Bluegrass", tool: "Phone",
+    detail: "She's in-and-out, doesn't f-around. Voicemail left asking which booth she wants. Cannot be on the curve with Martin (bubble rave going there). Available Bluegrass spots: 9 and 15.",
+    _seedDone: true },
+
+  // BLUEGRASS — THIS WEEK (moved from Today per Ashly)
+  { id: "bg2", priority: "week", event: "Bluegrass", tool: "Phone", dueDate: "2026-05-02",
     title: "Call Martin Ibarra (Fine Metal) — offer open Bluegrass spot",
     meta: "Fine Metal Creation",
     detail: "Pending application. Crystal: offer him a spot. If he can't take it: 'No alternative at this time.' He's fine with that." },
-  { id: "bg3", priority: "today", event: "Bluegrass", tool: "Email",
-    title: "Email Kyle (organic popsicles) — accept + send JotForm link",
-    meta: "Kyle — new vendor, organic frozen popsicles",
-    detail: "Organic popsicles ≠ shaved ice, so Terry Magnett won't flip. Send Bluegrass JotForm application link. Place in available spot once app is in." },
-  { id: "bg4", priority: "today", event: "Bluegrass", tool: "Phone",
+  { id: "bg4", priority: "week", event: "Bluegrass", tool: "Phone", dueDate: "2026-05-02",
     title: "Call Richard Ryan — offer Bluegrass booth 9 or 15",
     meta: "(928) 277-9981 • dickryanpottery@gmail.com",
     detail: "His picks (1, 7, 13) all taken. Only 9 and 15 open right now. Old guy, slow setup, wife with hearing aids. Pick the one with easier load-in. If neither works → check with Glossia about refund (minus $50 app fee)." },
-  { id: "bg5", priority: "today", event: "Bluegrass", tool: "Admin",
-    title: "Verify Smoking Guns refund processed by Glossia",
+  { id: "bg5", priority: "week", event: "Bluegrass", tool: "Admin", dueDate: "2026-05-02",
+    title: "Verify Smoking Guns refund processed by Glaucia",
     meta: "Smoking Guns BBQ (displaced for Texas Roadhouse)",
     detail: "Crystal left voicemail + email. TR is presenting sponsor → BBQ slot tent 1. Local + member precedence. If they call: 'No room this year. Thank you, come back next year.' Less is best." },
-  { id: "bg6", priority: "today", event: "Bluegrass", tool: "Sheets",
-    title: "Add Reliable Portable Restrooms to Master Contact Directory",
-    meta: "Your Jaylin contact",
-    detail: "Not member, not local — can't use for Bluegrass this year. Add to master list for future when sponsor needs quick local vendors." },
-  { id: "bg7", priority: "today", event: "Bluegrass", tool: "Drive",
-    title: "Pull 2025 Bluegrass acceptance letter template — update for 2026",
-    meta: "Bluegrass folder → vendors",
-    detail: "Crystal: 'Pull from 2025, update them all, then you're ready.' Update year, dates, booth #, your signature." },
-  { id: "bg8", priority: "today", event: "Bluegrass", tool: "Email",
-    title: "Send acceptance letters to all PLACED Bluegrass vendors EXCEPT Theresa Fenn",
-    meta: "14 vendors in JotForm sheet",
-    detail: "Crystal: 'Immediately start sending acceptance letters.' CC Matt on each. HOLD Theresa Fenn until booth sorted." },
-  { id: "bg9", priority: "today", event: "Bluegrass", tool: "Email",
+  { id: "bg9", priority: "week", event: "Bluegrass", tool: "Email", dueDate: "2026-05-03",
     title: "Email blast to Bluegrass past-vendor list — spots remaining",
     meta: "23-year contact sheet",
     detail: "After acceptance letters go out: 'Time is running out, book now. Here's what's left: [list].' Crystal's words." },
 
   // TERRITORIAL — THIS WEEK
-  { id: "td1", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td1", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-02",
     title: "Place Tina Bosi (Mama Bear) → Plaza Booth 22",
     meta: "Plaza event, booth 22 confirmed",
     detail: "Applied late (March), wants 22. Crystal: give it to her." },
-  { id: "td2", priority: "week", event: "Territorial", tool: "Phone",
+  { id: "td2", priority: "week", event: "Territorial", tool: "Phone", dueDate: "2026-05-02",
     title: "Call Vicki Cassius (Metal & Ash, NEW) → offer Plaza Booth 2 + 'no floor in store'",
     meta: "New jewelry vendor",
     detail: "All her picks (40, 49, 34) taken. New vendors → outer Montezuma row. CRITICAL: discuss her floor rug — 'no floor in the store' rule. Confirm she can drive up to load + park out." },
-  { id: "td3", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td3", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-02",
     title: "Place Chelsea Corso (NEW pottery) → Plaza Booth 3",
     meta: "Corso Pottery",
     detail: "Picks: 3, 4, 7. You already called — shelves perfect, fine day-of. Booth 3 = end of row = best traffic." },
-  { id: "td4", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td4", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-02",
     title: "Place Marcel (Native Wins) → Plaza Booth 114",
     meta: "Native Wins Jewelry",
     detail: "Picks 97/114/76. 114 is hard-to-sell (pole + porta-potties) but she wants it. Watch setup speed (driving area)." },
-  { id: "td5", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td5", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-02",
     title: "Place Marianne (Marianne's Jewelry) → Plaza Booth 10",
     meta: "Always same area",
     detail: "Picks 10/13/14 — 13&14 taken. Easy decision." },
-  { id: "td6", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td6", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-03",
     title: "Place Mr. Fitch (Creative Iron Patio, wood) → Plaza Booth 103",
     meta: "Wood Turner",
     detail: "Picks 104/103/102. 103 keeps separation from K-n-Kraft pottery. He's an 'I'll-make-it-work' guy." },
-  { id: "td7", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td7", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-03",
     title: "Place Tom (Creative Iron Patio metal) → Plaza Booths 29 & 30 (DOUBLE)",
     meta: "Metal — paid for double",
     detail: "Bases compliance issue resolved (diagonal ≤6in)." },
-  { id: "td8", priority: "week", event: "Territorial", tool: "Paper",
+  { id: "td8", priority: "week", event: "Territorial", tool: "Paper", dueDate: "2026-05-03",
     title: "Find Hang 5 Paragrip paper app in FedEx folder → Plaza Booth 102",
     meta: "20-year vendor, paper only",
     detail: "Always Booth 102. Find in FedEx folder Crystal handed you. POLICY: no more paper apps after this year." },
-  { id: "td9", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td9", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-03",
     title: "Verify Chef Andrea placement → Plaza Booth 56",
     meta: "Already entered per Crystal",
     detail: "Verify in sheet, mark confirmed." },
-  { id: "td10", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td10", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-04",
     title: "Place Priscilla Finney (Safari Samosas) → Plaza Booth C (food)",
     meta: "Front food row",
     detail: "Always in C. System won't accept letter booths — enter 0 placeholder. Fix system later." },
-  { id: "td11", priority: "week", event: "Territorial", tool: "Email",
+  { id: "td11", priority: "week", event: "Territorial", tool: "Email", dueDate: "2026-05-04",
     title: "Email Eric Exom (Happy Hippie) → confirm Plaza Booth 81",
     meta: "Hot sauce / food product",
     detail: "Picks 79/70/71 in Terry's area. Tried 66, sun wrong (food needs back facing sun). 81 works." },
-  { id: "td12", priority: "week", event: "Territorial", tool: "Sheets",
+  { id: "td12", priority: "week", event: "Territorial", tool: "Sheets", dueDate: "2026-05-04",
     title: "Place CF Chocolate (SF Chocolate Factory) → Plaza Booth E",
     meta: "Jay Levine",
     detail: "Last year had bee problem. Crystal promised E from here on. County notified, beast spray stocked." },
-  { id: "td13", priority: "week", event: "Territorial", tool: "Email",
+  { id: "td13", priority: "week", event: "Territorial", tool: "Email", dueDate: "2026-05-04",
     title: "Tara (Light Therapy) — DENY plaza, refund booth fee",
     meta: "Light Therapy Trap",
-    detail: "Not member, not artist. Told last year only qualifies for Off-Street. Keep $50 app fee. If she pushes back → route to Glossia, NOT you." },
-  { id: "td14", priority: "week", event: "Territorial", tool: "Phone",
+    detail: "Not member, not artist. Told last year only qualifies for Off-Street. Keep $50 app fee. If she pushes back → route to Glaucia, NOT you." },
+  { id: "td14", priority: "week", event: "Territorial", tool: "Phone", dueDate: "2026-05-05",
     title: "Call Richard Ryan (Territorial) → offer Plaza Booth 107",
     meta: "Picks all taken",
     detail: "Picks 44/39/4/89 all taken. 107 = easy driveway in/out for his wife with hearing aids. Script: 'Your picks weren't available, I spoke with Crystal. We know you liked easy load-in. Would you consider 107?'" },
-  { id: "td15", priority: "week", event: "Territorial", tool: "Internal",
+  { id: "td15", priority: "week", event: "Territorial", tool: "Internal", dueDate: "2026-05-05",
     title: "Ask Sheri about Trevor Brown — sponsor conflict",
     meta: "Everlasting Windows vs Anderson Windows",
-    detail: "Trevor applied to everything after Off-Street. Anderson Windows is a sponsor. Crystal/Glossia split. Bigger Q for Sheri: 'Do we take additional businesses instead of sponsors on plaza?'" },
-  { id: "td16", priority: "week", event: "Territorial", tool: "JotForm",
+    detail: "Trevor applied to everything after Off-Street. Anderson Windows is a sponsor. Crystal/Glaucia split. Bigger Q for Sheri: 'Do we take additional businesses instead of sponsors on plaza?'" },
+  { id: "td16", priority: "week", event: "Territorial", tool: "JotForm", dueDate: "2026-05-05",
     title: "Burn through pending Territorial approvals (68 submissions)",
     meta: "Auto-sends acceptance email on click",
     detail: "Crystal: 'You know the requirements. Approve all you can. Only ask me about the ones you're unsure of.'" },
-  { id: "td17", priority: "week", event: "Territorial", tool: "JotForm",
+  { id: "td17", priority: "week", event: "Territorial", tool: "JotForm", dueDate: "2026-05-06",
     title: "Backfill acceptance emails for already-approved vendors",
     meta: "Workflow didn't run retroactively",
     detail: "Either backdate in JotForm or manually send catch-up emails to vendors approved before workflow was set up." },
-  { id: "td18", priority: "week", event: "Territorial", tool: "JotForm",
+  { id: "td18", priority: "week", event: "Territorial", tool: "JotForm", dueDate: "2026-05-06",
     title: "Fix JotForm booth field — accept LETTERS (A-J, C, E)",
     meta: "System bug",
     detail: "Currently using 0 placeholder. Change field type in JotForm so it accepts text values." },
@@ -2307,7 +2503,7 @@ const SEED_EVENTS = [
 // ============================================================================
 // STORAGE LAYER
 // ============================================================================
-const STORAGE_KEY = 'chamberhq_v1';
+const STORAGE_KEY = 'chamberhq_v2';
 
 function loadState() {
   try {
@@ -2315,16 +2511,25 @@ function loadState() {
     if (raw) return JSON.parse(raw);
   } catch (e) {}
   return {
-    tasks: SEED_TASKS.map(t => ({ ...t, custom: false, done: false })),
+    tasks: SEED_TASKS.map(t => ({
+      ...t,
+      custom: false,
+      done: t._seedDone || false,
+      doneAt: t._seedDone ? '2026-04-29' : null,
+    })),
     events: SEED_EVENTS.map(e => ({
       ...e,
-      itemStates: {},        // { "section_idx_item_idx": true/false }
-      customItems: {},       // { "section_idx": [extra items] }
+      itemStates: {},
+      customItems: {},
       hidden: false,
     })),
+    templates: SEED_TEMPLATES.map(t => ({ ...t })),
+    agendas: [],
     customTaskIds: [],
     nextTaskId: 1000,
     nextItemId: 10000,
+    nextTemplateId: 500,
+    nextAgendaId: 200,
   };
 }
 
@@ -2353,24 +2558,30 @@ function setView(view) {
   document.querySelector(`.nav-btn[data-view="${view}"]`)?.classList.add('active');
 
   const titles = {
-    tasks: { t: '🚨 Priority Tasks', s: formatToday() },
-    events: { t: '📋 Event Checklists', s: 'Tap an event to open its checklist' },
-    checklist: { t: '📋 Checklist', s: '' },
-    calendar: { t: '📅 Calendar', s: 'Upcoming events' },
-    contacts: { t: '👥 Contacts', s: 'Staff, key externals & vendors' },
-    settings: { t: '⚙️ Settings', s: 'Backup, restore, install' },
+    tasks:     { t: '🚨 Priority Tasks',     s: formatToday() },
+    events:    { t: '📋 Event Checklists',   s: 'Tap an event to open its checklist' },
+    checklist: { t: '📋 Checklist',          s: '' },
+    calendar:  { t: '📅 Calendar',           s: 'Upcoming events' },
+    contacts:  { t: '👥 Contacts',           s: 'Staff, key externals & vendors' },
+    templates: { t: '🗂️ Event Templates',    s: 'Reusable checklists for any year' },
+    tpldetail: { t: '🗂️ Edit Template',      s: '' },
+    agenda:    { t: '📄 Agendas',            s: 'Build & finalize event agendas' },
+    agendaedit:{ t: '📄 Edit Agenda',        s: '' },
+    settings:  { t: '⚙️ Settings',           s: 'Backup, restore, install' },
   };
-  const v = view === 'checklist' && openChecklistId ? 'checklist' : view;
-  document.getElementById('page-title').textContent = titles[v].t;
-  document.getElementById('page-sub').textContent = titles[v].s;
+  const vKey = ['checklist','tpldetail','agendaedit'].includes(view) ? view : view;
+  document.getElementById('page-title').textContent = (titles[view] || titles.tasks).t;
+  document.getElementById('page-sub').textContent   = (titles[view] || titles.tasks).s;
 
   document.getElementById('fab').style.display =
-    (view === 'tasks' || view === 'events') ? 'flex' : 'none';
+    ['tasks','events','templates','agenda'].includes(view) ? 'flex' : 'none';
 
-  if (view === 'tasks') renderTasks();
-  if (view === 'events') renderEvents();
-  if (view === 'calendar') renderCalendar();
-  if (view === 'contacts') renderContacts();
+  if (view === 'tasks')     renderTasks();
+  if (view === 'events')    renderEvents();
+  if (view === 'calendar')  renderCalendar();
+  if (view === 'contacts')  renderContacts();
+  if (view === 'templates') renderTemplates();
+  if (view === 'agenda')    renderAgendas();
   window.scrollTo(0, 0);
 }
 
@@ -2380,90 +2591,140 @@ function formatToday() {
   });
 }
 
+// === SMART DATE LOGIC ===
+function getTodayStr() { return new Date().toISOString().slice(0,10); }
+function getThisWeekEnd() {
+  const d = new Date(); const day = d.getDay();
+  d.setDate(d.getDate() + (7 - day)); return d.toISOString().slice(0,10);
+}
+function getNextWeekEnd() {
+  const d = new Date(); const day = d.getDay();
+  d.setDate(d.getDate() + (14 - day)); return d.toISOString().slice(0,10);
+}
+
+// Returns effective priority for display — overdue beats today, due dates auto-escalate
+function effectivePriority(t) {
+  if (t.done) return 'done';
+  const today = getTodayStr();
+  const weekEnd = getThisWeekEnd();
+  const nextEnd = getNextWeekEnd();
+  // If task has a dueDate and it's past → overdue
+  if (t.dueDate && t.dueDate < today) return 'overdue';
+  // If task has dueDate within today → promote to today
+  if (t.dueDate && t.dueDate === today && t.priority !== 'today') return 'today';
+  // If task has dueDate within this week → promote to week
+  if (t.dueDate && t.dueDate <= weekEnd && t.dueDate > today && t.priority === 'next') return 'week';
+  return t.priority;
+}
+
+function formatDueDate(dueDate) {
+  if (!dueDate) return '';
+  const today = getTodayStr();
+  const dt = new Date(dueDate + 'T12:00:00');
+  const label = dt.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+  if (dueDate < today) return `<div class="task-due-date overdue-label">⚠️ Due ${label}</div>`;
+  if (dueDate === today) return `<div class="task-due-date overdue-label">📅 Due Today</div>`;
+  return `<div class="task-due-date">📅 Due ${label}</div>`;
+}
+
 // === TASK RENDERING ===
 const TASK_TABS = [
-  { id: 'today', label: '🔴 Today' },
-  { id: 'week', label: '🟠 This Week' },
-  { id: 'next', label: '🟡 Next Week' },
-  { id: 'soon', label: '⚪ Later' },
-  { id: 'all', label: 'All' },
-  { id: 'custom', label: '✨ Mine' },
+  { id: 'today',   label: '🔴 Today' },
+  { id: 'week',    label: '🟠 This Week' },
+  { id: 'next',    label: '🟡 Next Week' },
+  { id: 'soon',    label: '⚪ Later' },
+  { id: 'overdue', label: '🚨 Overdue' },
+  { id: 'all',     label: 'All' },
+  { id: 'custom',  label: '✨ Mine' },
 ];
 
 function renderTasks() {
-  // stats
-  const today = state.tasks.filter(t => t.priority === 'today' && !t.done).length;
-  const week = state.tasks.filter(t => t.priority === 'week' && !t.done).length;
-  const next = state.tasks.filter(t => t.priority === 'next' && !t.done).length;
-  const done = state.tasks.filter(t => t.done).length;
-  document.getElementById('stat-today').textContent = today;
-  document.getElementById('stat-week').textContent = week;
-  document.getElementById('stat-next').textContent = next;
-  document.getElementById('stat-done').textContent = done;
+  const todayStr = getTodayStr();
+  // compute effective priorities
+  const tasksWithEff = state.tasks.map(t => ({ ...t, _eff: effectivePriority(t) }));
+
+  const counts = {
+    today:   tasksWithEff.filter(t => t._eff === 'today').length,
+    week:    tasksWithEff.filter(t => t._eff === 'week').length,
+    next:    tasksWithEff.filter(t => t._eff === 'next').length,
+    overdue: tasksWithEff.filter(t => t._eff === 'overdue').length,
+    done:    tasksWithEff.filter(t => t.done).length,
+  };
+  document.getElementById('stat-today').textContent  = counts.today + counts.overdue;
+  document.getElementById('stat-week').textContent   = counts.week;
+  document.getElementById('stat-next').textContent   = counts.next;
+  document.getElementById('stat-done').textContent   = counts.done;
 
   // tabs
   const tabsEl = document.getElementById('task-tabs');
-  tabsEl.innerHTML = TASK_TABS.map(t => {
+  tabsEl.innerHTML = TASK_TABS.map(tab => {
     let count;
-    if (t.id === 'all') count = state.tasks.filter(x => !x.done).length;
-    else if (t.id === 'custom') count = state.tasks.filter(x => x.custom && !x.done).length;
-    else count = state.tasks.filter(x => x.priority === t.id && !x.done).length;
-    return `<button class="tab ${activeTaskTab === t.id ? 'active' : ''}" onclick="setTaskTab('${t.id}')">${t.label}<span class="count">${count}</span></button>`;
+    if (tab.id === 'all')     count = tasksWithEff.filter(x => !x.done).length;
+    else if (tab.id === 'custom') count = tasksWithEff.filter(x => x.custom && !x.done).length;
+    else if (tab.id === 'overdue') count = counts.overdue;
+    else count = tasksWithEff.filter(x => x._eff === tab.id).length;
+    const urgent = tab.id === 'overdue' && count > 0;
+    return `<button class="tab ${activeTaskTab===tab.id?'active':''} ${urgent?'urgent-tab':''}" onclick="setTaskTab('${tab.id}')">${tab.label}<span class="count">${count}</span></button>`;
   }).join('');
 
-  // list
+  // filter
   const q = document.getElementById('task-search').value.toLowerCase().trim();
-  let list = state.tasks.slice();
-  if (activeTaskTab === 'custom') list = list.filter(t => t.custom);
-  else if (activeTaskTab !== 'all') list = list.filter(t => t.priority === activeTaskTab);
+  let list = tasksWithEff.slice();
+  if (activeTaskTab === 'custom')  list = list.filter(t => t.custom);
+  else if (activeTaskTab === 'all') { /* no filter */ }
+  else list = list.filter(t => t._eff === activeTaskTab);
   if (q) list = list.filter(t =>
     [t.title, t.meta, t.detail, t.event].join(' ').toLowerCase().includes(q)
   );
 
-  const groups = { today: [], week: [], next: [], soon: [], done: [] };
+  const groups = { overdue:[], today:[], week:[], next:[], soon:[], done:[] };
   list.forEach(t => {
-    const k = t.done ? 'done' : t.priority;
-    (groups[k] || groups.soon).push(t);
+    (groups[t._eff] || groups.soon).push(t);
   });
 
-  const labels = { today: '🔴 Do Today', week: '🟠 This Week', next: '🟡 Next Week', soon: '⚪ Later / Whenever', done: '✅ Done' };
+  const labels = {
+    overdue: '🚨 Overdue — Act Now',
+    today:   '🔴 Do Today',
+    week:    '🟠 This Week',
+    next:    '🟡 Next Week',
+    soon:    '⚪ Later / Whenever',
+    done:    '✅ Done',
+  };
   let html = '';
-  ['today','week','next','soon','done'].forEach(g => {
+  ['overdue','today','week','next','soon','done'].forEach(g => {
     if (!groups[g].length) return;
     html += `<div class="section-title">${labels[g]} — ${groups[g].length}</div>`;
     groups[g].forEach(t => { html += renderTaskCard(t); });
   });
 
   const el = document.getElementById('task-list');
-  if (!html) {
-    el.innerHTML = `<div class="empty"><span class="emoji">✨</span>Nothing here. Either you crushed it or your filter is too tight.</div>`;
-  } else {
-    el.innerHTML = html;
-  }
+  el.innerHTML = html || `<div class="empty"><span class="emoji">✨</span>Nothing here — either you're caught up or your filter's too tight.</div>`;
 }
 
 function renderTaskCard(t) {
-  const pClass = t.done ? 'done' : t.priority;
-  const pLabel = t.done ? 'Done' : (t.priority === 'today' ? 'Today' : t.priority === 'week' ? 'This Week' : t.priority === 'next' ? 'Next Week' : 'Later');
+  const eff = t._eff || effectivePriority(t);
+  const pClass = eff;
+  const pLabels = { overdue:'🚨 Overdue', today:'Today', week:'This Week', next:'Next Week', soon:'Later', done:'Done' };
   return `
     <div class="task priority-${pClass}" id="task-${t.id}">
       <div class="task-row">
         <div class="checkbox ${t.done ? 'checked' : ''}" onclick="toggleTask('${t.id}')"></div>
         <div class="task-body">
           <div class="badges">
-            <span class="badge ${pClass}">${pLabel}</span>
+            <span class="badge ${pClass}">${pLabels[pClass]||pClass}</span>
             ${t.event ? `<span class="badge event">${escapeHtml(t.event)}</span>` : ''}
-            ${t.tool ? `<span class="badge tool">${escapeHtml(t.tool)}</span>` : ''}
-            ${t.custom ? `<span class="badge custom">✨ Mine</span>` : ''}
+            ${t.tool  ? `<span class="badge tool">${escapeHtml(t.tool)}</span>` : ''}
+            ${t.custom? `<span class="badge custom">✨ Mine</span>` : ''}
           </div>
           <div class="title">${escapeHtml(t.title)}</div>
           ${t.meta ? `<div class="meta">${escapeHtml(t.meta)}</div>` : ''}
+          ${formatDueDate(t.dueDate)}
           ${t.detail ? `
             <button class="expand" onclick="toggleExpand('${t.id}', this)">Show details ↓</button>
             <div class="detail">${escapeHtml(t.detail)}</div>` : ''}
           <div class="actions">
             <button class="edit-btn" onclick="editTask('${t.id}')">✏️ Edit</button>
-            ${t.custom ? `<button class="del-btn" onclick="deleteTask('${t.id}')">🗑 Delete</button>` : ''}
+            <button class="del-btn" onclick="deleteTask('${t.id}')">🗑 Delete</button>
           </div>
         </div>
       </div>
@@ -2586,10 +2847,13 @@ function renderChecklist() {
     sec.items.forEach((item, iIdx) => {
       const k = `${sIdx}_${iIdx}`;
       const done = !!e.itemStates[k];
+      const hidden = e.hiddenItems && e.hiddenItems[k];
+      if (hidden) return;
       html += `
         <div class="check-item ${done ? 'done' : ''}">
           <div class="checkbox ${done ? 'checked' : ''}" onclick="toggleChecklistItem('${e.id}', ${sIdx}, ${iIdx})"></div>
           <div class="ci-text">${escapeHtml(item)}</div>
+          <button class="ci-del" onclick="hideChecklistItem('${e.id}', ${sIdx}, ${iIdx})" title="Remove item">×</button>
         </div>`;
     });
     if (e.customItems[sIdx]) {
@@ -2649,7 +2913,14 @@ function deleteCustomItem(eid, sIdx, cIdx) {
   renderChecklist();
 }
 
-// === CONTACTS ===
+function hideChecklistItem(eid, sIdx, iIdx) {
+  const e = state.events.find(x => x.id === eid);
+  if (!e) return;
+  if (!confirm('Remove this item from the checklist?')) return;
+  if (!e.hiddenItems) e.hiddenItems = {};
+  e.hiddenItems[`${sIdx}_${iIdx}`] = true;
+  saveState(); renderChecklist();
+}
 const CONTACTS_DATA = [
   {
     group: "🏢 Chamber Staff",
@@ -2898,6 +3169,929 @@ function renderContacts() {
   document.getElementById('contacts-list').innerHTML = html;
 }
 
+// === TEMPLATES ===
+const SEED_TEMPLATES = [
+  {
+    id: 'tpl-artshow', name: 'Art Show', emoji: '🎨',
+    description: 'Full checklist for Off-Street, Bluegrass, Territorial, Labor Day, Fall Show',
+    type: 'art-show',
+    fields: [
+      { key: 'venue', label: 'Venue / Location', hint: 'Past: Courthouse Plaza, Whiskey Row, Gurley St.' },
+      { key: 'permitContact', label: 'County Permit Contact', hint: 'Usually: Jasmine Menna' },
+      { key: 'healthContact', label: 'Health Dept. Contact', hint: 'Usually: Sally Shelby — 928-442-5510' },
+      { key: 'restroomVendor', label: 'Restroom Vendor', hint: 'Past: Reliable Portable Restrooms (Jaylin)' },
+      { key: 'foodVendorCount', label: 'Est. Food Vendors', hint: 'Used to notify county health dept.' },
+    ],
+    sections: [
+      { title: '🗓️ 90 Days Out', items: [
+        'Submit county special event permit application',
+        'Submit city E-TRAKiT permit application',
+        'Confirm venue availability and booking',
+        'Open JotForm vendor applications',
+        'Notify past vendors — save the date',
+        'Begin sponsor outreach',
+      ]},
+      { title: '🗓️ 60 Days Out', items: [
+        'Newsletter #1 blast',
+        'Social media posts scheduled (Matt)',
+        'Food vendor list sent to county health dept.',
+        'Confirm vendor count target',
+        'Confirm restroom vendor',
+        'Confirm insurance certificate (ACT Insurance)',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2 blast',
+        'Send finalized vendor list to Jasmine Menna',
+        'Acceptance letters sent (CC Matt)',
+        'Confirm all sponsor placements',
+        'Finalize event map / booth layout',
+        'Confirm TPT license compliance for food vendors',
+        'Confirm restroom placement with county',
+      ]},
+      { title: 'Vendor Management', items: [
+        'All JotForm applications reviewed',
+        'Booth assignments complete',
+        'Waitlist managed',
+        'Acceptance letters sent for all placed vendors',
+        'Denial letters sent (keep $50 app fee)',
+        'Food vendor health permits verified',
+      ]},
+      { title: 'Venue & Logistics', items: [
+        'Confirm venue booking',
+        'Confirm road closure / permit approved',
+        'Restroom vendor confirmed + placed',
+        'Staff arrival time confirmed',
+        'Complete walkthrough',
+        'Walkthrough Checklist',
+        'Bring Event Box',
+      ]},
+      { title: 'Sponsors & Partners', items: [
+        'Presenting sponsor confirmed',
+        'All sponsor agreements signed',
+        'Sponsor banners/signage arranged',
+        'Sponsor booth placements confirmed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'Vendor check-in table set up',
+        'Walkthrough with county/city contact',
+        'Photos — Matt on site',
+        'Issues log running',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you emails to sponsors',
+        'Thank-you to venue contact',
+        'Photos edited (CapCut — Matt)',
+        'Debrief notes documented',
+        'Survey sent to vendors',
+        'File permits and paperwork',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-coffee', name: 'Coffee Connect', emoji: '☕',
+    description: 'Monthly networking breakfast — hosted by member business',
+    type: 'coffee-connect',
+    fields: [
+      { key: 'venue', label: 'Host Venue', hint: 'Past: Prescott Lakes, Espire Sports, various member businesses' },
+      { key: 'hostContact', label: 'Host Contact Name & Phone', hint: 'Coordinate F&B, room layout, sound system' },
+      { key: 'eventPartner', label: 'EXPO Event Partner', hint: '$250 table / $1,000 full — one partner per event' },
+      { key: 'speaker', label: 'Speaker / Featured Member', hint: 'Optional — 5 min spotlight' },
+    ],
+    sections: [
+      { title: '🗓️ 90 Days Out', items: [
+        'Confirm host agreement on file',
+        'Site visit scheduled',
+      ]},
+      { title: '🗓️ 60 Days Out', items: [
+        'Newsletter #1',
+        'Confirm venue event manager contact',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Build event in MC Trade',
+        'Confirm event partner',
+      ]},
+      { title: 'Office Planning', items: [
+        'Host agreement copy on file',
+        'Site visit completed',
+        'Event agenda drafted',
+        'Registration on website / MC Trade',
+        'Flyers: membership, website, social, VIC',
+      ]},
+      { title: 'Venue', items: [
+        'Drinks + refreshments confirmed',
+        'Sound system confirmed',
+        'Raffle / 50-50 / prize tables set',
+        'Space layout confirmed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'Sign-in table',
+        'Event partner recognition',
+        'Networking',
+        'Photos (Matt)',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to venue host',
+        'Thank-you to EXPO event partner',
+        'Survey',
+        'Debrief notes',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-luncheon', name: 'Luncheon / Awards Event', emoji: '🏆',
+    description: 'Seated luncheon format — Women in Business, Business Awards, etc.',
+    type: 'luncheon',
+    fields: [
+      { key: 'venue', label: 'Venue', hint: 'Past: Hilton Garden Inn (Sam Hill Warehouse), Prescott Resort' },
+      { key: 'venueContact', label: 'Venue Contact', hint: 'e.g. Tamara Burks — 928-515-3422' },
+      { key: 'caterer', label: 'Caterer / F&B', hint: 'Past: Crossroads Café, venue in-house' },
+      { key: 'speaker', label: 'Speaker', hint: 'Must have full title. Email Agenda + Flyer 30 days prior.' },
+      { key: 'emcee', label: 'Emcee', hint: 'Confirm at least 30 days out' },
+      { key: 'sponsors', label: 'Sponsors (tier + name)', hint: 'Include all tiers — verify against updated 2026 list' },
+    ],
+    sections: [
+      { title: '🗓️ 90 Days Out', items: [
+        'Confirm venue booking',
+        'Speaker identified and confirmed',
+        'Sponsor outreach begins',
+      ]},
+      { title: '🗓️ 60 Days Out', items: [
+        'Newsletter #1',
+        'Flyer designed (Matt)',
+        'Registration open (MC Trade / website)',
+        'Catering confirmed — menu selected',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Agenda finalized',
+        'Agenda + Flyer emailed to speaker',
+        'Emcee confirmed',
+        'All sponsor logos collected',
+        'AV/sound confirmed with venue',
+      ]},
+      { title: 'Venue & Logistics', items: [
+        'Confirm room setup (rounds, head table, podium)',
+        'Confirm A/V — mic, screen, clicker',
+        'Registration table set up (paid event)',
+        'Complete walkthrough',
+        'Walkthrough Checklist',
+        'Bring Event Box',
+      ]},
+      { title: 'Sponsors & Partners', items: [
+        'All sponsor agreements signed',
+        'Sponsor recognition in program/slides',
+        'Sponsor table assignments confirmed',
+        'Sponsor banners placed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival (90 min before)',
+        'Registration table active',
+        'Speaker greeted + briefed',
+        'Photos (Matt)',
+        'Run of show confirmed with emcee',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to speaker (schedule — do not send immediately)',
+        'Thank-you to venue',
+        'Thank-you to sponsors',
+        'Photos (CapCut — Matt)',
+        'Survey / Google Form',
+        'Debrief notes',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-networking', name: 'Networking @ Nite', emoji: '🍻',
+    description: 'Evening mixer at member business — no registration, free event',
+    type: 'networking',
+    fields: [
+      { key: 'venue', label: 'Host Venue', hint: 'Past: Cutter Aviation (July), Barley Hound (Oct)' },
+      { key: 'hostContact', label: 'Host Contact', hint: 'Coordinate setup, food/drinks, parking' },
+      { key: 'eventPartner', label: 'EXPO Event Partner', hint: 'Optional — $250/$1,000' },
+    ],
+    sections: [
+      { title: '🗓️ 60 Days Out', items: [
+        'Confirm host agreement',
+        'Newsletter #1',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Social posts (Matt)',
+        'Confirm event partner',
+      ]},
+      { title: 'Venue', items: [
+        'Food + drinks confirmed (host provides)',
+        'Parking situation assessed',
+        'Space layout confirmed',
+        'No sign-in table (free event)',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'Event partner recognition',
+        'Photos (Matt)',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to host',
+        'Thank-you to event partner',
+        'Photos (CapCut — Matt)',
+        'Debrief notes',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-vets', name: 'Vets Connect', emoji: '🎖️',
+    description: 'Veterans networking — Connect (May) or EXPO (Aug/Nov) format',
+    type: 'vets',
+    fields: [
+      { key: 'venue', label: 'Venue', hint: 'Connect: American Legion Post 6 | EXPO: Club at Prescott Lakes | Nov: Phippen Museum' },
+      { key: 'venueContact', label: 'Venue Contact', hint: 'American Legion: Brenda Smull | Lakes: Verify 2026 Mgr | Phippen: Edd Kellerman' },
+      { key: 'emcee', label: 'Emcee', hint: 'Past: Patrick Kuykendall (May)' },
+      { key: 'sponsor', label: 'Presenting Sponsor', hint: "Past: Bucky's & Yavapai Casinos" },
+    ],
+    sections: [
+      { title: '🗓️ 60 Days Out', items: [
+        'Confirm venue booking',
+        'Newsletter #1',
+        'Confirm presenting sponsor',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Confirm emcee / speaker',
+        'Confirm dignitaries (Eli Crane office?)',
+        'Confirm refreshments',
+      ]},
+      { title: 'Venue & Logistics', items: [
+        'Confirm room setup',
+        'Refreshments confirmed',
+        'Staff arrival 4:30 PM',
+        'Complete walkthrough',
+        'Walkthrough Checklist',
+        'Bring Event Box',
+      ]},
+      { title: 'Sponsors & Partners', items: [
+        'Presenting sponsor confirmed',
+        'Team RWB partnership acknowledged',
+        'Sponsor recognition confirmed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'No sign-in table (free event)',
+        'Sponsor recognition',
+        'Photos (Matt)',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to venue host',
+        'Thank-you to sponsors',
+        'Photos (CapCut — Matt)',
+        'Debrief notes',
+      ]},
+    ],
+  },
+];
+
+// Template state
+let activeTplId = null;
+
+function renderTemplates() {
+  if (activeTplId) { renderTemplateDetail(); return; }
+  if (!state.templates) state.templates = SEED_TEMPLATES.map(t=>({...t}));
+  let html = `
+    <div style="margin-bottom:12px;padding:10px 14px;background:#EEF4FF;border:1px solid #C8D9F5;border-radius:10px;font-size:12px;line-height:1.6;color:var(--navy)">
+      <strong>📌 How Templates Work</strong><br>
+      Templates are reusable checklists. Tap <strong>Use Template</strong> to create a dated event for 2027 (or any year) — fill in venue, contacts, etc. Edit templates here to update the structure for all future events.
+    </div>`;
+  state.templates.forEach(tpl => {
+    const totalItems = tpl.sections.reduce((n,s) => n + s.items.length, 0);
+    html += `
+      <div class="tpl-card">
+        <div class="tpl-card-header">
+          <div class="tpl-emoji">${tpl.emoji||'📋'}</div>
+          <div class="tpl-name">${escapeHtml(tpl.name)}</div>
+        </div>
+        <div class="tpl-meta">${escapeHtml(tpl.description||'')} · ${tpl.sections.length} sections · ${totalItems} items</div>
+        <div class="tpl-actions">
+          <button class="tpl-btn primary" onclick="startUseTpl('${tpl.id}')">📅 Use Template</button>
+          <button class="tpl-btn secondary" onclick="openTplDetail('${tpl.id}')">✏️ Edit</button>
+          ${tpl.custom ? `<button class="tpl-btn danger" onclick="deleteTpl('${tpl.id}')">🗑 Delete</button>` : ''}
+        </div>
+      </div>`;
+  });
+  document.getElementById('templates-list').innerHTML = html;
+}
+
+function openTplDetail(id) {
+  activeTplId = id;
+  renderTemplateDetail();
+  document.getElementById('page-title').textContent = '🗂️ Edit Template';
+  document.getElementById('page-sub').textContent = '';
+}
+
+function renderTemplateDetail() {
+  const tpl = state.templates.find(t => t.id === activeTplId);
+  if (!tpl) { activeTplId = null; renderTemplates(); return; }
+  let html = `
+    <div class="tpl-detail">
+      <button class="back-btn" onclick="closeTplDetail()">← All Templates</button>
+      <div class="tpl-detail-header">
+        <div class="tpl-card-header" style="margin-bottom:6px">
+          <div class="tpl-emoji">${tpl.emoji||'📋'}</div>
+          <div class="tpl-name">${escapeHtml(tpl.name)}</div>
+        </div>
+        <div class="tpl-meta" style="margin-bottom:10px">${escapeHtml(tpl.description||'')}</div>
+        <button class="tpl-btn primary" onclick="startUseTpl('${tpl.id}')">📅 Use This Template → Create Event</button>
+      </div>`;
+
+  tpl.sections.forEach((sec, sIdx) => {
+    html += `
+      <div class="tpl-section-card">
+        <h4>
+          <span>${escapeHtml(sec.title)}</span>
+          <button class="tpl-item-del" onclick="renameTplSection('${tpl.id}',${sIdx})" title="Rename section" style="color:var(--navy);font-size:14px">✏️</button>
+        </h4>`;
+    sec.items.forEach((item, iIdx) => {
+      html += `
+        <div class="tpl-item-row">
+          <span style="flex:1">${escapeHtml(item)}</span>
+          <button class="tpl-item-del" onclick="deleteTplItem('${tpl.id}',${sIdx},${iIdx})">×</button>
+        </div>`;
+    });
+    html += `
+        <div class="tpl-add-row">
+          <input id="tpl-add-${sIdx}" placeholder="Add checklist item…">
+          <button onclick="addTplItem('${tpl.id}',${sIdx})">+ Add</button>
+        </div>
+      </div>`;
+  });
+
+  html += `
+      <div class="tpl-section-card" style="border:2px dashed var(--border);box-shadow:none">
+        <h4>Add New Section</h4>
+        <div class="tpl-add-row">
+          <input id="tpl-new-section" placeholder="Section title…">
+          <button onclick="addTplSection('${tpl.id}')">+ Add</button>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('templates-list').innerHTML = html;
+}
+
+function closeTplDetail() { activeTplId = null; renderTemplates(); document.getElementById('page-title').textContent = '🗂️ Event Templates'; document.getElementById('page-sub').textContent = 'Reusable checklists for any year'; }
+
+function deleteTplItem(tplId, sIdx, iIdx) {
+  const tpl = state.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  tpl.sections[sIdx].items.splice(iIdx, 1);
+  saveState(); renderTemplateDetail();
+}
+function addTplItem(tplId, sIdx) {
+  const tpl = state.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  const inp = document.getElementById(`tpl-add-${sIdx}`);
+  const text = inp.value.trim();
+  if (!text) return;
+  tpl.sections[sIdx].items.push(text);
+  saveState(); renderTemplateDetail(); showToast('Item added ✓');
+}
+function addTplSection(tplId) {
+  const tpl = state.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  const inp = document.getElementById('tpl-new-section');
+  const title = inp.value.trim();
+  if (!title) return;
+  tpl.sections.push({ title, items: [] });
+  saveState(); renderTemplateDetail(); showToast('Section added ✓');
+}
+function renameTplSection(tplId, sIdx) {
+  const tpl = state.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  const name = prompt('New section name:', tpl.sections[sIdx].title);
+  if (name && name.trim()) { tpl.sections[sIdx].title = name.trim(); saveState(); renderTemplateDetail(); }
+}
+function deleteTpl(tplId) {
+  if (!confirm('Delete this template?')) return;
+  state.templates = state.templates.filter(t => t.id !== tplId);
+  saveState(); activeTplId = null; renderTemplates(); showToast('Deleted');
+}
+
+// "Use Template" — open a panel below the template to fill in details and create an event
+let usingTplId = null;
+function startUseTpl(tplId) {
+  usingTplId = tplId;
+  const tpl = state.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  document.getElementById('modal-title').textContent = `📅 Use: ${tpl.name}`;
+  let fieldsHtml = tpl.fields ? tpl.fields.map(f => `
+    <label>${escapeHtml(f.label)}</label>
+    <input id="utf-${f.key}" placeholder="${escapeAttr(f.hint||'')}">
+    <div style="font-size:10.5px;color:var(--muted);margin-bottom:6px;margin-top:-4px">${escapeHtml(f.hint||'')}</div>
+  `).join('') : '';
+  document.getElementById('modal-body').innerHTML = `
+    <label>Event Name</label>
+    <input id="utf-name" value="${escapeAttr(tpl.name)}" placeholder="e.g. Bluegrass Festival 2027">
+    <label>Date</label>
+    <input id="utf-date" type="date">
+    <label>Time</label>
+    <input id="utf-time" placeholder="e.g. 9:00 AM – 4:00 PM">
+    ${fieldsHtml}
+    <label>Notes (optional)</label>
+    <textarea id="utf-notes" placeholder="Anything specific to this year's event"></textarea>
+  `;
+  document.getElementById('modal-save').onclick = () => {
+    const name = document.getElementById('utf-name').value.trim();
+    const date = document.getElementById('utf-date').value;
+    if (!name || !date) { showToast('Name and date required'); return; }
+    const fieldVals = {};
+    if (tpl.fields) tpl.fields.forEach(f => {
+      fieldVals[f.key] = document.getElementById(`utf-${f.key}`)?.value?.trim() || '';
+    });
+    const id = 'tev' + (state.nextTaskId++);
+    // Build event — merge filled field values into the first section note
+    const metaParts = tpl.fields ? tpl.fields.filter(f=>fieldVals[f.key]).map(f=>`${f.label}: ${fieldVals[f.key]}`).join(' · ') : '';
+    state.events.push({
+      id, name, date,
+      time: document.getElementById('utf-time').value.trim(),
+      venue: fieldVals.venue || '',
+      contact: fieldVals.venueContact || fieldVals.hostContact || '',
+      note: [document.getElementById('utf-notes').value.trim(), metaParts].filter(Boolean).join('\n'),
+      type: tpl.type || 'custom',
+      emoji: tpl.emoji || '✨',
+      custom: true,
+      fromTemplate: tplId,
+      sections: tpl.sections.map(s => ({ ...s, items: [...s.items] })),
+      itemStates: {}, customItems: {}, hiddenItems: {}, hidden: false,
+    });
+    saveState(); closeModal(); showToast('Event created ✓');
+    setView('events');
+  };
+  document.getElementById('modal').classList.add('show');
+}
+
+function openNewTemplateModal() {
+  document.getElementById('modal-title').textContent = 'New Template';
+  document.getElementById('modal-body').innerHTML = `
+    <label>Template Name</label>
+    <input id="ntpl-name" placeholder="e.g. Ribbon Cutting">
+    <label>Emoji</label>
+    <input id="ntpl-emoji" placeholder="🎀" maxlength="4" style="width:80px">
+    <label>Description</label>
+    <input id="ntpl-desc" placeholder="One-line description">
+  `;
+  document.getElementById('modal-save').onclick = () => {
+    const name = document.getElementById('ntpl-name').value.trim();
+    if (!name) { showToast('Name required'); return; }
+    const id = 'tpl-c' + (state.nextTemplateId++);
+    if (!state.templates) state.templates = [];
+    state.templates.push({
+      id, name,
+      emoji: document.getElementById('ntpl-emoji').value.trim() || '📋',
+      description: document.getElementById('ntpl-desc').value.trim(),
+      type: 'custom', custom: true, fields: [],
+      sections: [
+        { title: '60 Days Out', items: [] },
+        { title: '30 Days Out', items: [] },
+        { title: 'Venue & Logistics', items: [] },
+        { title: 'Day-Of', items: [] },
+        { title: 'Post-Event', items: [] },
+      ],
+    });
+    saveState(); closeModal(); renderTemplates(); showToast('Template created ✓');
+  };
+  document.getElementById('modal').classList.add('show');
+}
+
+// === AGENDA BUILDER ===
+const AGENDA_TEMPLATES = {
+  luncheon: {
+    label: 'Luncheon / Awards',
+    fields: [
+      { key: 'org', label: 'Organization Line', default: 'Prescott Chamber of Commerce', hint: '' },
+      { key: 'eventName', label: 'Event Name', default: '', hint: 'e.g. Women in Business Luncheon 2027' },
+      { key: 'date', label: 'Date', type: 'date', hint: '' },
+      { key: 'time', label: 'Time', default: '11:30 AM – 1:30 PM', hint: '' },
+      { key: 'venue', label: 'Venue', default: '', hint: 'Past: Hilton Garden Inn / Sam Hill Warehouse' },
+      { key: 'address', label: 'Address', default: '', hint: '' },
+      { key: 'catering', label: 'Catering / F&B', default: '', hint: 'Past: Crossroads Café, venue in-house' },
+      { key: 'emcee', label: 'Emcee', default: '', hint: '' },
+      { key: 'speaker', label: 'Speaker (full title)', default: '', hint: 'Full title required — e.g. Dr. Jane Smith, CEO, Prescott Medical Center' },
+      { key: 'sponsors', label: 'Sponsors', default: '', hint: 'List all tiers, comma-separated' },
+      { key: 'notes', label: 'Special Notes', default: '', hint: 'Optional' },
+    ],
+    buildItems: (f) => [
+      { time: f.time.split('–')[0]?.trim() || '11:30 AM', desc: 'Doors Open & Networking', presenter: '' },
+      { time: '12:00 PM', desc: 'Welcome & Introductions', presenter: f.emcee || 'Emcee' },
+      { time: '12:05 PM', desc: 'Sponsor Recognition', presenter: f.emcee || 'Emcee' },
+      { time: '12:10 PM', desc: 'Catered Lunch Service', presenter: f.catering || 'Catering' },
+      { time: '12:30 PM', desc: 'Featured Speaker', presenter: f.speaker || 'Speaker' },
+      { time: '1:10 PM', desc: 'Q&A / Discussion', presenter: f.emcee || 'Emcee' },
+      { time: '1:25 PM', desc: 'Closing Remarks & Thank-Yous', presenter: f.emcee || 'Emcee' },
+      { time: '1:30 PM', desc: 'Adjourn', presenter: '' },
+    ],
+  },
+  coffee: {
+    label: 'Coffee Connect',
+    fields: [
+      { key: 'org', label: 'Organization Line', default: 'Prescott Chamber of Commerce', hint: '' },
+      { key: 'eventName', label: 'Event Name', default: 'Coffee Connect', hint: '' },
+      { key: 'date', label: 'Date', type: 'date', hint: '' },
+      { key: 'time', label: 'Time', default: '7:30 – 9:30 AM', hint: '' },
+      { key: 'venue', label: 'Host Venue', default: '', hint: 'e.g. The Club at Prescott Lakes' },
+      { key: 'address', label: 'Address', default: '', hint: '' },
+      { key: 'hostContact', label: 'Host Contact', default: '', hint: '' },
+      { key: 'eventPartner', label: 'EXPO Event Partner', default: '', hint: '' },
+      { key: 'speaker', label: 'Featured Member Spotlight (optional)', default: '', hint: '' },
+    ],
+    buildItems: (f) => [
+      { time: '7:30 AM', desc: 'Doors Open — Coffee & Networking', presenter: '' },
+      { time: '8:00 AM', desc: 'Welcome & Announcements', presenter: 'Chamber Staff' },
+      { time: '8:05 AM', desc: 'Event Partner Introduction', presenter: f.eventPartner || 'Event Partner' },
+      { time: '8:15 AM', desc: 'Open Networking', presenter: '' },
+      ...(f.speaker ? [{ time: '9:00 AM', desc: 'Member Spotlight', presenter: f.speaker }] : []),
+      { time: '9:25 AM', desc: 'Closing Remarks', presenter: 'Chamber Staff' },
+      { time: '9:30 AM', desc: 'Adjourn', presenter: '' },
+    ],
+  },
+  vets: {
+    label: 'Vets Connect',
+    fields: [
+      { key: 'org', label: 'Organization Line', default: 'Prescott Chamber of Commerce', hint: '' },
+      { key: 'eventName', label: 'Event Name', default: 'Vets Connect', hint: 'e.g. Vets Connect — May 2027' },
+      { key: 'date', label: 'Date', type: 'date', hint: '' },
+      { key: 'time', label: 'Time', default: '5:30 – 7:30 PM', hint: '' },
+      { key: 'venue', label: 'Venue', default: '', hint: 'American Legion Post 6 / Club at Prescott Lakes / Phippen Museum' },
+      { key: 'address', label: 'Address', default: '', hint: '' },
+      { key: 'emcee', label: 'Emcee / Facilitator', default: '', hint: 'Past: Patrick Kuykendall' },
+      { key: 'speaker', label: 'Speaker / Dignitary (if any)', default: '', hint: "e.g. Rep. Eli Crane's Office" },
+      { key: 'sponsor', label: 'Presenting Sponsor', default: '', hint: "Past: Bucky's & Yavapai Casinos" },
+    ],
+    buildItems: (f) => [
+      { time: '5:30 PM', desc: 'Doors Open — Networking & Refreshments', presenter: '' },
+      { time: '6:00 PM', desc: 'Welcome & Opening Remarks', presenter: f.emcee || 'Emcee' },
+      { time: '6:05 PM', desc: 'Sponsor Recognition', presenter: f.emcee || 'Emcee' },
+      { time: '6:10 PM', desc: 'Remarks', presenter: f.speaker || f.emcee || '' },
+      { time: '6:30 PM', desc: 'Open Networking', presenter: '' },
+      { time: '7:20 PM', desc: 'Closing Remarks & Thank-Yous', presenter: f.emcee || 'Emcee' },
+      { time: '7:30 PM', desc: 'Adjourn', presenter: '' },
+    ],
+  },
+  networking: {
+    label: 'Networking @ Nite',
+    fields: [
+      { key: 'org', label: 'Organization Line', default: 'Prescott Chamber of Commerce', hint: '' },
+      { key: 'eventName', label: 'Event Name', default: 'Networking @ Nite', hint: '' },
+      { key: 'date', label: 'Date', type: 'date', hint: '' },
+      { key: 'time', label: 'Time', default: '5:30 – 7:30 PM', hint: '' },
+      { key: 'venue', label: 'Host Venue', default: '', hint: 'Past: Cutter Aviation (July), Barley Hound (Oct)' },
+      { key: 'address', label: 'Address', default: '', hint: '' },
+      { key: 'hostContact', label: 'Host Contact', default: '', hint: '' },
+      { key: 'eventPartner', label: 'EXPO Event Partner (if any)', default: '', hint: '' },
+    ],
+    buildItems: (f) => [
+      { time: '5:30 PM', desc: 'Doors Open — Networking & Refreshments', presenter: '' },
+      { time: '6:00 PM', desc: 'Welcome & Host Introduction', presenter: 'Chamber Staff' },
+      ...(f.eventPartner ? [{ time: '6:05 PM', desc: 'Event Partner Recognition', presenter: f.eventPartner }] : []),
+      { time: '6:10 PM', desc: 'Open Networking', presenter: '' },
+      { time: '7:25 PM', desc: 'Closing Remarks', presenter: 'Chamber Staff' },
+      { time: '7:30 PM', desc: 'Adjourn', presenter: '' },
+    ],
+  },
+  custom: {
+    label: 'Custom Event',
+    fields: [
+      { key: 'org', label: 'Organization Line', default: 'Prescott Chamber of Commerce', hint: '' },
+      { key: 'eventName', label: 'Event Name', default: '', hint: '' },
+      { key: 'date', label: 'Date', type: 'date', hint: '' },
+      { key: 'time', label: 'Time', default: '', hint: '' },
+      { key: 'venue', label: 'Venue', default: '', hint: '' },
+      { key: 'address', label: 'Address', default: '', hint: '' },
+      { key: 'emcee', label: 'Emcee / Facilitator', default: '', hint: '' },
+      { key: 'speaker', label: 'Speaker (full title)', default: '', hint: '' },
+      { key: 'notes', label: 'Additional Notes', default: '', hint: '' },
+    ],
+    buildItems: (f) => [
+      { time: '', desc: 'Welcome & Introductions', presenter: f.emcee || '' },
+      { time: '', desc: 'Program / Main Content', presenter: f.speaker || '' },
+      { time: '', desc: 'Q&A', presenter: '' },
+      { time: '', desc: 'Closing Remarks', presenter: f.emcee || '' },
+      { time: '', desc: 'Adjourn', presenter: '' },
+    ],
+  },
+};
+
+let activeAgendaId = null;
+let agendaEditMode = false; // 'form' | 'final'
+
+function renderAgendas() {
+  if (activeAgendaId) { renderAgendaDetail(); return; }
+  if (!state.agendas) state.agendas = [];
+  let html = `
+    <div style="margin-bottom:12px;padding:10px 14px;background:#EEF4FF;border:1px solid #C8D9F5;border-radius:10px;font-size:12px;line-height:1.6;color:var(--navy)">
+      <strong>📌 Agenda Builder</strong><br>
+      Create an agenda for any event type. Fill in the details — the app suggests what you've used in past years. Hit <strong>Finalize</strong> to generate the formatted document ready to print or share.
+    </div>`;
+
+  if (!state.agendas.length) {
+    html += `<div class="empty"><span class="emoji">📄</span>No agendas yet. Tap + to create your first one.</div>`;
+  } else {
+    state.agendas.forEach(ag => {
+      const dt = ag.fields?.date ? new Date(ag.fields.date + 'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}) : '';
+      html += `
+        <div class="agenda-card">
+          <div class="agenda-card-header">
+            <div class="agenda-name">${escapeHtml(ag.fields?.eventName || ag.type)}</div>
+            <span class="agenda-status ${ag.finalized?'final':'draft'}">${ag.finalized?'Final':'Draft'}</span>
+          </div>
+          <div class="agenda-meta-line">${dt}${ag.fields?.venue ? ' · ' + escapeHtml(ag.fields.venue) : ''}</div>
+          <div class="agenda-actions">
+            <button class="agenda-btn primary" onclick="openAgendaEdit('${ag.id}')">✏️ Edit</button>
+            ${ag.finalized ? `<button class="agenda-btn success" onclick="openAgendaFinal('${ag.id}')">📄 View Final</button>` : `<button class="agenda-btn success" onclick="finalizeAgenda('${ag.id}')">✅ Finalize</button>`}
+            <button class="agenda-btn danger" onclick="deleteAgenda('${ag.id}')">🗑</button>
+          </div>
+        </div>`;
+    });
+  }
+  document.getElementById('agenda-list').innerHTML = html;
+}
+
+function openNewAgendaModal() {
+  document.getElementById('modal-title').textContent = 'New Agenda';
+  document.getElementById('modal-body').innerHTML = `
+    <label>Event Type</label>
+    <select id="nag-type">
+      ${Object.entries(AGENDA_TEMPLATES).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
+    </select>
+  `;
+  document.getElementById('modal-save').onclick = () => {
+    const type = document.getElementById('nag-type').value;
+    const id = 'ag' + (state.nextAgendaId++);
+    if (!state.agendas) state.agendas = [];
+    state.agendas.push({ id, type, fields: {}, customItems: null, finalized: false });
+    saveState(); closeModal();
+    activeAgendaId = id; agendaEditMode = 'form';
+    setView('agenda');
+    showToast('Agenda created ✓');
+  };
+  document.getElementById('modal').classList.add('show');
+}
+
+function openAgendaEdit(id) {
+  activeAgendaId = id; agendaEditMode = 'form';
+  renderAgendas();
+  document.getElementById('page-title').textContent = '📄 Edit Agenda';
+  document.getElementById('page-sub').textContent = '';
+}
+
+function openAgendaFinal(id) {
+  activeAgendaId = id; agendaEditMode = 'final';
+  renderAgendas();
+  document.getElementById('page-title').textContent = '📄 Finalized Agenda';
+  document.getElementById('page-sub').textContent = '';
+}
+
+function closeAgendaDetail() {
+  activeAgendaId = null; agendaEditMode = false;
+  renderAgendas();
+  document.getElementById('page-title').textContent = '📄 Agendas';
+  document.getElementById('page-sub').textContent = 'Build & finalize event agendas';
+}
+
+function renderAgendaDetail() {
+  const ag = state.agendas.find(a => a.id === activeAgendaId);
+  if (!ag) { activeAgendaId = null; renderAgendas(); return; }
+  if (agendaEditMode === 'final') { renderAgendaFinal(ag); return; }
+
+  const tmpl = AGENDA_TEMPLATES[ag.type] || AGENDA_TEMPLATES.custom;
+  let html = `
+    <div class="agenda-form">
+      <button class="back-btn" onclick="closeAgendaDetail()">← All Agendas</button>
+      <div class="agenda-form-section">
+        <h3>Event Details</h3>`;
+
+  tmpl.fields.forEach(f => {
+    const val = ag.fields[f.key] || f.default || '';
+    html += `<div class="agenda-field">
+      <label>${escapeHtml(f.label)}</label>
+      ${f.type === 'date'
+        ? `<input type="date" id="agf-${f.key}" value="${escapeAttr(val)}">`
+        : `<input id="agf-${f.key}" value="${escapeAttr(val)}" placeholder="${escapeAttr(f.hint||f.label)}">`}`;
+    if (f.hint && f.type !== 'date') html += `<div class="agenda-hint"><strong>💡 Past usage:</strong> ${escapeHtml(f.hint)}</div>`;
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  // Custom agenda items editor
+  const items = ag.customItems || tmpl.buildItems(ag.fields);
+  html += `
+    <div class="agenda-form-section">
+      <h3>Agenda Items <span style="font-weight:400;font-size:10px;color:var(--muted)">(auto-generated from your fields — edit freely)</span></h3>`;
+
+  items.forEach((item, idx) => {
+    html += `
+      <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center">
+        <input style="width:75px;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);flex-shrink:0" id="agi-time-${idx}" value="${escapeAttr(item.time||'')}" placeholder="Time">
+        <input style="flex:1;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text)" id="agi-desc-${idx}" value="${escapeAttr(item.desc||'')}" placeholder="Item">
+        <input style="width:110px;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);flex-shrink:0" id="agi-pres-${idx}" value="${escapeAttr(item.presenter||'')}" placeholder="Presenter">
+        <button onclick="removeAgendaItem(${idx})" style="border:none;background:none;color:#C0392B;font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0">×</button>
+      </div>`;
+  });
+
+  html += `
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <input style="width:75px;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text)" id="agi-new-time" placeholder="Time">
+        <input style="flex:1;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text)" id="agi-new-desc" placeholder="Add item…">
+        <input style="width:110px;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text)" id="agi-new-pres" placeholder="Presenter">
+        <button onclick="addAgendaItem()" style="border:none;background:var(--navy);color:white;font-size:13px;font-weight:700;padding:6px 10px;border-radius:7px;cursor:pointer;flex-shrink:0">+</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-bottom:80px">
+      <button class="agenda-btn primary" style="flex:1" onclick="saveAgendaDraft()">💾 Save Draft</button>
+      <button class="agenda-btn success" style="flex:1" onclick="finalizeAgenda('${ag.id}')">✅ Finalize</button>
+    </div>
+  </div>`;
+
+  document.getElementById('agenda-list').innerHTML = html;
+}
+
+function collectAgendaFields(ag) {
+  const tmpl = AGENDA_TEMPLATES[ag.type] || AGENDA_TEMPLATES.custom;
+  tmpl.fields.forEach(f => {
+    const el = document.getElementById(`agf-${f.key}`);
+    if (el) ag.fields[f.key] = el.value.trim();
+  });
+}
+
+function collectAgendaItems(ag) {
+  const items = [];
+  let idx = 0;
+  while (document.getElementById(`agi-time-${idx}`) || document.getElementById(`agi-desc-${idx}`)) {
+    const time = document.getElementById(`agi-time-${idx}`)?.value?.trim() || '';
+    const desc = document.getElementById(`agi-desc-${idx}`)?.value?.trim() || '';
+    const presenter = document.getElementById(`agi-pres-${idx}`)?.value?.trim() || '';
+    if (desc) items.push({ time, desc, presenter });
+    idx++;
+  }
+  return items;
+}
+
+function saveAgendaDraft() {
+  const ag = state.agendas.find(a => a.id === activeAgendaId);
+  if (!ag) return;
+  collectAgendaFields(ag);
+  ag.customItems = collectAgendaItems(ag);
+  ag.finalized = false;
+  saveState(); showToast('Draft saved ✓');
+}
+
+function removeAgendaItem(idx) {
+  const ag = state.agendas.find(a => a.id === activeAgendaId);
+  if (!ag) return;
+  collectAgendaFields(ag);
+  let items = collectAgendaItems(ag);
+  items.splice(idx, 1);
+  ag.customItems = items;
+  saveState(); renderAgendaDetail();
+}
+
+function addAgendaItem() {
+  const ag = state.agendas.find(a => a.id === activeAgendaId);
+  if (!ag) return;
+  collectAgendaFields(ag);
+  let items = collectAgendaItems(ag);
+  const time = document.getElementById('agi-new-time')?.value?.trim() || '';
+  const desc = document.getElementById('agi-new-desc')?.value?.trim() || '';
+  const presenter = document.getElementById('agi-new-pres')?.value?.trim() || '';
+  if (!desc) return;
+  items.push({ time, desc, presenter });
+  ag.customItems = items;
+  saveState(); renderAgendaDetail(); showToast('Item added ✓');
+}
+
+function finalizeAgenda(id) {
+  const ag = state.agendas.find(a => a.id === id);
+  if (!ag) return;
+  if (activeAgendaId === id) {
+    collectAgendaFields(ag);
+    ag.customItems = collectAgendaItems(ag);
+  }
+  ag.finalized = true;
+  saveState();
+  activeAgendaId = id; agendaEditMode = 'final';
+  renderAgendas();
+  document.getElementById('page-title').textContent = '📄 Finalized Agenda';
+  document.getElementById('page-sub').textContent = '';
+  showToast('Agenda finalized ✓');
+}
+
+function renderAgendaFinal(ag) {
+  const tmpl = AGENDA_TEMPLATES[ag.type] || AGENDA_TEMPLATES.custom;
+  const f = ag.fields || {};
+  const items = ag.customItems || tmpl.buildItems(f);
+  const dt = f.date ? new Date(f.date + 'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) : '';
+
+  let itemsHtml = items.map(item => `
+    <div class="ao-item">
+      <div class="ao-time">${escapeHtml(item.time||'')}</div>
+      <div class="ao-desc">
+        ${escapeHtml(item.desc)}
+        ${item.presenter ? `<div class="ao-presenter">${escapeHtml(item.presenter)}</div>` : ''}
+      </div>
+    </div>`).join('');
+
+  const html = `
+    <div class="agenda-form" style="padding-bottom:80px">
+      <button class="back-btn" onclick="closeAgendaDetail()">← All Agendas</button>
+
+      <div class="agenda-print-bar">
+        <button class="agenda-btn secondary" onclick="openAgendaEdit('${ag.id}')">✏️ Edit</button>
+        <button class="agenda-btn primary" onclick="printAgenda()">🖨️ Print / Save PDF</button>
+        <button class="agenda-btn secondary" onclick="copyAgendaText('${ag.id}')">📋 Copy Text</button>
+      </div>
+
+      <div class="agenda-output" id="agenda-printable">
+        <div class="ao-org">${escapeHtml(f.org || 'Prescott Chamber of Commerce')}</div>
+        <div class="ao-title">${escapeHtml(f.eventName || '')}</div>
+        <div class="ao-subtitle">${dt}${f.time ? ' · ' + escapeHtml(f.time) : ''}</div>
+        <hr>
+        <div class="ao-meta">
+          ${f.venue ? `<strong>📍 Venue:</strong> ${escapeHtml(f.venue)}${f.address ? ', ' + escapeHtml(f.address) : ''}<br>` : ''}
+          ${f.emcee ? `<strong>🎤 Emcee:</strong> ${escapeHtml(f.emcee)}<br>` : ''}
+          ${f.speaker ? `<strong>🎤 Speaker:</strong> ${escapeHtml(f.speaker)}<br>` : ''}
+          ${f.catering ? `<strong>🍽️ Catering:</strong> ${escapeHtml(f.catering)}<br>` : ''}
+          ${f.sponsors ? `<strong>🤝 Sponsors:</strong> ${escapeHtml(f.sponsors)}<br>` : ''}
+          ${f.eventPartner ? `<strong>🤝 Event Partner:</strong> ${escapeHtml(f.eventPartner)}<br>` : ''}
+          ${f.notes ? `<em>${escapeHtml(f.notes)}</em>` : ''}
+        </div>
+        <hr>
+        <div class="ao-section-title">PROGRAM</div>
+        ${itemsHtml}
+        <div class="ao-footer">Prescott Chamber of Commerce · prescottchamber.com · 928-445-2000</div>
+      </div>
+    </div>`;
+
+  document.getElementById('agenda-list').innerHTML = html;
+}
+
+function printAgenda() {
+  const content = document.getElementById('agenda-printable');
+  if (!content) return;
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html><head><title>Agenda</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 30px; color: #1a1a1a; }
+      .ao-org { text-align:center; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#7B2D3B; margin-bottom:4px; }
+      .ao-title { text-align:center; font-size:20px; font-weight:800; color:#1F4E78; margin-bottom:2px; }
+      .ao-subtitle { text-align:center; font-size:12px; color:#555; margin-bottom:14px; }
+      hr { border:none; border-top:2px solid #7B2D3B; margin:12px 0; }
+      .ao-meta { font-size:12px; line-height:1.8; margin-bottom:12px; }
+      .ao-section-title { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; color:#7B2D3B; margin:14px 0 6px; }
+      .ao-item { display:flex; gap:12px; font-size:12px; margin-bottom:7px; }
+      .ao-time { min-width:80px; font-weight:700; }
+      .ao-presenter { color:#1F4E78; font-weight:700; }
+      .ao-footer { text-align:center; font-size:10px; color:#999; margin-top:20px; font-style:italic; }
+    </style></head><body>${content.innerHTML}</body></html>
+  `);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); }, 400);
+}
+
+function copyAgendaText(agId) {
+  const ag = state.agendas.find(a => a.id === agId);
+  if (!ag) return;
+  const f = ag.fields || {};
+  const tmpl = AGENDA_TEMPLATES[ag.type] || AGENDA_TEMPLATES.custom;
+  const items = ag.customItems || tmpl.buildItems(f);
+  const dt = f.date ? new Date(f.date + 'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) : '';
+  const lines = [
+    f.org || 'Prescott Chamber of Commerce',
+    f.eventName || '',
+    `${dt}${f.time ? ' · ' + f.time : ''}`,
+    '',
+    f.venue ? `Venue: ${f.venue}` : '',
+    f.emcee ? `Emcee: ${f.emcee}` : '',
+    f.speaker ? `Speaker: ${f.speaker}` : '',
+    '',
+    'PROGRAM',
+    ...items.map(i => `${i.time ? i.time + '  ' : ''}${i.desc}${i.presenter ? ' — ' + i.presenter : ''}`),
+    '',
+    'Prescott Chamber of Commerce · prescottchamber.com · 928-445-2000',
+  ].filter(l => l !== undefined);
+  navigator.clipboard.writeText(lines.join('\n')).then(() => showToast('Copied ✓')).catch(() => showToast('Copy failed'));
+}
+
+function deleteAgenda(id) {
+  if (!confirm('Delete this agenda?')) return;
+  state.agendas = state.agendas.filter(a => a.id !== id);
+  if (activeAgendaId === id) activeAgendaId = null;
+  saveState(); renderAgendas(); showToast('Deleted');
+}
+
 // === CALENDAR ===
 function renderCalendar() {
   const today = new Date().toISOString().slice(0,10);
@@ -2944,10 +4138,12 @@ function openTaskModal(task) {
     <label>Priority</label>
     <select id="m-priority">
       <option value="today" ${t.priority==='today'?'selected':''}>🔴 Today</option>
-      <option value="week" ${t.priority==='week'?'selected':''}>🟠 This Week</option>
-      <option value="next" ${t.priority==='next'?'selected':''}>🟡 Next Week</option>
-      <option value="soon" ${t.priority==='soon'?'selected':''}>⚪ Later</option>
+      <option value="week"  ${t.priority==='week' ?'selected':''}>🟠 This Week</option>
+      <option value="next"  ${t.priority==='next' ?'selected':''}>🟡 Next Week</option>
+      <option value="soon"  ${t.priority==='soon' ?'selected':''}>⚪ Later</option>
     </select>
+    <label>Due Date (optional)</label>
+    <input id="m-due" type="date" value="${escapeAttr(t.dueDate||'')}">
     <label>Event (optional)</label>
     <input id="m-event" value="${escapeAttr(t.event||'')}" placeholder="Bluegrass, Territorial, etc.">
     <label>Tool / Channel (optional)</label>
@@ -2963,10 +4159,11 @@ function openTaskModal(task) {
     const data = {
       title,
       priority: document.getElementById('m-priority').value,
-      event: document.getElementById('m-event').value.trim(),
-      tool: document.getElementById('m-tool').value.trim(),
-      meta: document.getElementById('m-meta').value.trim(),
-      detail: document.getElementById('m-detail').value.trim(),
+      dueDate:  document.getElementById('m-due').value || null,
+      event:    document.getElementById('m-event').value.trim(),
+      tool:     document.getElementById('m-tool').value.trim(),
+      meta:     document.getElementById('m-meta').value.trim(),
+      detail:   document.getElementById('m-detail').value.trim(),
     };
     if (isEdit) {
       Object.assign(t, data);
@@ -3101,13 +4298,20 @@ function showToast(msg) {
 
 // === EVENT BINDINGS ===
 document.querySelectorAll('.nav-btn').forEach(b => {
-  b.addEventListener('click', () => setView(b.dataset.view));
+  b.addEventListener('click', () => {
+    // Reset sub-views when switching tabs
+    if (b.dataset.view === 'templates') activeTplId = null;
+    if (b.dataset.view === 'agenda') activeAgendaId = null;
+    setView(b.dataset.view);
+  });
 });
 document.getElementById('task-search').addEventListener('input', renderTasks);
 document.getElementById('event-search').addEventListener('input', renderEvents);
 document.getElementById('fab').addEventListener('click', () => {
-  if (activeView === 'tasks') openTaskModal(null);
-  else if (activeView === 'events') openEventModal();
+  if (activeView === 'tasks')     openTaskModal(null);
+  else if (activeView === 'events')    openEventModal();
+  else if (activeView === 'templates') openNewTemplateModal();
+  else if (activeView === 'agenda')    openNewAgendaModal();
 });
 document.getElementById('modal').addEventListener('click', (e) => {
   if (e.target.id === 'modal') closeModal();
