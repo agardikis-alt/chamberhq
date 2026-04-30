@@ -433,6 +433,19 @@
 
   .tab.urgent-tab { border-color: #C0392B !important; color: #C0392B !important; }
   .tab.urgent-tab .count { background: #C0392B; color: white; }
+
+  /* --- CHECKLIST SECTION DUE DATES --- */
+  .checklist-section h3 { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .sec-due {
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px;
+    white-space: nowrap; letter-spacing: 0.2px; flex-shrink: 0;
+  }
+  .sec-due.overdue  { background: #FDECEA; color: #C0392B; border: 1px solid #F5C6C6; }
+  .sec-due.today    { background: #FFF3CD; color: #856404; border: 1px solid #FFEAA7; }
+  .sec-due.upcoming { background: #E8F5E9; color: #1E7A34; border: 1px solid #C8E6C9; }
+  .section-overdue  { border-left: 3px solid #C0392B !important; background: #FFFAFA !important; }
+  .section-overdue h3 { color: #C0392B; }
+
   /* --- OVERDUE TASK STYLE --- */
   .priority-overdue { border-left-color: #C0392B !important; background: #FFF5F5 !important; }
   .badge.overdue { background: #C0392B; color: white; animation: pulse 1.5s infinite; }
@@ -3098,6 +3111,40 @@ function openChecklist(id) {
   renderChecklist();
 }
 
+// Returns a due date string for a checklist section based on event date + section title
+function getSectionDueDate(eventDate, sectionTitle) {
+  const t = sectionTitle.toLowerCase();
+  const eMs = new Date(eventDate + 'T12:00:00').getTime();
+  const day = 24 * 60 * 60 * 1000;
+  let offsetDays = null;
+
+  if (t.includes('90') || t.includes('90-day'))   offsetDays = -90;
+  else if (t.includes('60') || t.includes('60-day')) offsetDays = -60;
+  else if (t.includes('30') || t.includes('30-day')) offsetDays = -30;
+  else if (t.includes('post-event') || t.includes('post event') || t.includes('follow')) offsetDays = +3;
+  else if (t.includes('day-of') || t.includes('day of') || t.includes('day of event')) offsetDays = 0;
+  else if (t.includes('venue') || t.includes('logistics')) offsetDays = -7;
+  else if (t.includes('marketing') || t.includes('rsvp') || t.includes('promotion')) offsetDays = -14;
+  else if (t.includes('sponsor') || t.includes('partner')) offsetDays = -30;
+  else if (t.includes('vendor')) offsetDays = -21;
+  else if (t.includes('office') || t.includes('planning')) offsetDays = -45;
+  else if (t.includes('permit') || t.includes('regulatory')) offsetDays = -60;
+
+  if (offsetDays === null) return null;
+  const dueMs = eMs + (offsetDays * day);
+  return new Date(dueMs).toISOString().slice(0, 10);
+}
+
+function formatSectionDue(dueDate, sectionTitle) {
+  if (!dueDate) return '';
+  const today = getTodayStr();
+  const dt = new Date(dueDate + 'T12:00:00');
+  const label = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  if (dueDate < today)  return { html: `<span class="sec-due overdue">⚠️ Was due ${label}</span>`, overdue: true };
+  if (dueDate === today) return { html: `<span class="sec-due today">📅 Due Today</span>`, overdue: false };
+  return { html: `<span class="sec-due upcoming">📅 ${label}</span>`, overdue: false };
+}
+
 function renderChecklist() {
   const e = state.events.find(x => x.id === openChecklistId);
   if (!e) { setView('events'); return; }
@@ -3127,7 +3174,15 @@ function renderChecklist() {
 
   e.sections.forEach((sec, sIdx) => {
     const isPrep = sec.title.includes('🗓️') || sec.title.includes('Days Out');
-    html += `<div class="checklist-section${isPrep ? ' prep' : ''}"><h3>${escapeHtml(sec.title)}</h3>`;
+    const dueDate = getSectionDueDate(e.date, sec.title);
+    const dueFmt = dueDate ? formatSectionDue(dueDate, sec.title) : null;
+    const sectionOverdue = dueFmt && dueFmt.overdue;
+
+    html += `<div class="checklist-section${isPrep ? ' prep' : ''}${sectionOverdue ? ' section-overdue' : ''}">
+      <h3>
+        <span>${escapeHtml(sec.title)}</span>
+        ${dueFmt ? dueFmt.html : ''}
+      </h3>`;
     sec.items.forEach((item, iIdx) => {
       const k = `${sIdx}_${iIdx}`;
       const done = !!e.itemStates[k];
