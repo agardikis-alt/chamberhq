@@ -2905,13 +2905,20 @@ function effectivePriority(t) {
   const today = getTodayStr();
   const weekEnd = getThisWeekEnd();
   const nextEnd = getNextWeekEnd();
-  // If task has a dueDate and it's past → overdue
-  if (t.dueDate && t.dueDate < today) return 'overdue';
-  // If task has dueDate within today → promote to today
-  if (t.dueDate && t.dueDate === today && t.priority !== 'today') return 'today';
-  // If task has dueDate within this week → promote to week
-  if (t.dueDate && t.dueDate <= weekEnd && t.dueDate > today && t.priority === 'next') return 'week';
-  return t.priority;
+
+  if (!t.dueDate) return t.priority; // no due date — respect manual priority
+
+  // Past due → overdue (always wins)
+  if (t.dueDate < today) return 'overdue';
+  // Due today → Today
+  if (t.dueDate === today) return 'today';
+  // Due within this week → This Week
+  if (t.dueDate <= weekEnd) return 'week';
+  // Due within next week → Next Week
+  if (t.dueDate <= nextEnd) return 'next';
+  // Due beyond next week → Later (but never hide something already set to today/week)
+  if (t.priority === 'today' || t.priority === 'week') return t.priority;
+  return 'soon';
 }
 
 function formatDueDate(dueDate) {
@@ -3221,6 +3228,20 @@ function toggleChecklistItem(eid, sIdx, iIdx) {
   if (!e) return;
   const k = `${sIdx}_${iIdx}`;
   e.itemStates[k] = !e.itemStates[k];
+
+  // If section is now fully done, auto-check the corresponding section task
+  const sec = e.sections[sIdx];
+  if (sec) {
+    const totalItems = sec.items.length + (e.customItems?.[sIdx]?.length || 0);
+    const hiddenCount = Object.keys(e.hiddenItems || {}).filter(hk => hk.startsWith(sIdx + '_')).length;
+    const doneCount = Object.keys(e.itemStates).filter(ik => ik.startsWith(sIdx + '_') && e.itemStates[ik]).length;
+    const customDone = (e.customItems?.[sIdx] || []).filter(i => i.done).length;
+    const allDone = (doneCount + customDone) >= (totalItems - hiddenCount);
+    const secTask = state.tasks.find(t => t.id === `sec_${eid}_${sIdx}`);
+    if (secTask && allDone && !secTask.done) secTask.done = true;
+    if (secTask && !allDone && secTask.done) secTask.done = false;
+  }
+
   saveState();
   renderChecklist();
 }
@@ -4378,14 +4399,15 @@ document.getElementById('modal').addEventListener('click', (e) => {
 
 // 3-MONTHS-AHEAD TASK ENGINE
 // Sheri's rule: be 3 months ahead on all events wherever possible.
-// This runs at startup and generates reminder tasks for events coming up
-// within the next 120 days that don't already have a "start prep" task.
+// Runs at startup — generates tasks for:
+//   (a) 90/60/30-day prep milestones per event
+//   (b) Each checklist section's due date, so it auto-appears in the right tab
 function runAheadEngine() {
   const today = getTodayStr();
   const todayMs = new Date(today).getTime();
   const horizonMs = todayMs + (120 * 24 * 60 * 60 * 1000); // 120 days out
+  const day = 24 * 60 * 60 * 1000;
 
-  // Events that qualify: upcoming, not hidden, not art shows (those have their own timelines)
   const upcoming = state.events.filter(e => {
     if (e.hidden) return false;
     const eMs = new Date(e.date + 'T12:00:00').getTime();
@@ -4394,51 +4416,64 @@ function runAheadEngine() {
 
   upcoming.forEach(ev => {
     const eDate = new Date(ev.date + 'T12:00:00');
-    const daysOut = Math.round((eDate.getTime() - todayMs) / (24 * 60 * 60 * 1000));
+    const eDateMs = eDate.getTime();
+    const daysOut = Math.round((eDateMs - todayMs) / day);
 
-    // For each event, figure out which prep milestone is due
-    // 90 days: start prep / permits / sponsor outreach
-    // 60 days: newsletter #1 / marketing
-    // 30 days: newsletter #2 / finalize agenda / confirm contacts
-
+    // ── (a) Big milestone tasks ──────────────────────────────────────────────
     const milestones = [
-      { days: 90, priority: 'week',  label: '90-day prep',
-        title: `[90-Day Prep] ${ev.name} — start permits, sponsor outreach`,
-        detail: `Event is ${daysOut} days away (${ev.date}). Sheri's 3-month rule: submit county/city permits, begin sponsor outreach, confirm venue, open vendor applications if applicable.` },
-      { days: 60, priority: 'week',  label: '60-day prep',
+      { days: 90, priority: 'week',
+        title: `[90-Day Prep] ${ev.name} — permits, sponsor outreach, venue`,
+        detail: `Event is ${daysOut} days away (${ev.date}). Submit county/city permits, begin sponsor outreach, confirm venue booking, open vendor applications if applicable.` },
+      { days: 60, priority: 'week',
         title: `[60-Day Prep] ${ev.name} — Newsletter #1, marketing, confirm F&B`,
         detail: `Event is ${daysOut} days away (${ev.date}). Send Newsletter #1, schedule social posts with Matt, confirm catering/F&B, finalize sponsor list.` },
-      { days: 30, priority: 'today', label: '30-day prep',
+      { days: 30, priority: 'today',
         title: `[30-Day Prep] ${ev.name} — Newsletter #2, finalize agenda, speaker outreach`,
         detail: `Event is ${daysOut} days away (${ev.date}). Send Newsletter #2, finalize and send agenda to speaker (30-day rule), confirm emcee, confirm all logistics.` },
     ];
 
     milestones.forEach(m => {
-      // Only create if we're within 7 days of when this milestone should fire
-      // i.e., daysOut is between m.days-7 and m.days+14
       if (daysOut > m.days + 14 || daysOut < m.days - 7) return;
-
-      const existingKey = `ahead_${ev.id}_${m.days}`;
-      // Check if this task already exists
-      const exists = state.tasks.some(t => t.id === existingKey);
-      if (exists) return;
-
-      // Calculate what the due date should be (event date minus m.days)
-      const dueDate = new Date(eDate.getTime() - (m.days * 24 * 60 * 60 * 1000))
-        .toISOString().slice(0, 10);
-
+      const id = `ahead_${ev.id}_${m.days}`;
+      if (state.tasks.some(t => t.id === id)) return;
+      const dueDate = new Date(eDateMs - (m.days * day)).toISOString().slice(0, 10);
       state.tasks.unshift({
-        id: existingKey,
-        priority: m.priority,
-        dueDate,
-        event: ev.name,
-        tool: 'Planning',
-        title: m.title,
-        meta: `📅 Event: ${ev.date} · ${ev.venue || ''}`,
+        id, priority: m.priority, dueDate,
+        event: ev.name, tool: 'Planning',
+        title: m.title, meta: `📅 Event: ${ev.date}${ev.venue ? ' · ' + ev.venue : ''}`,
         detail: m.detail,
-        custom: false,
-        done: false,
-        _aheadTask: true,
+        custom: false, done: false, _aheadTask: true,
+      });
+    });
+
+    // ── (b) Per-section tasks — auto-appear on the right tab by due date ─────
+    (ev.sections || []).forEach((sec, sIdx) => {
+      const dueDate = getSectionDueDate(ev.date, sec.title);
+      if (!dueDate) return;
+
+      // Only generate within a 120-day window and only if section isn't fully done
+      const dueDaysOut = Math.round((new Date(dueDate + 'T12:00:00').getTime() - todayMs) / day);
+      if (dueDaysOut > 120) return; // too far out
+      if (dueDaysOut < -14) return; // too long ago
+
+      const id = `sec_${ev.id}_${sIdx}`;
+      if (state.tasks.some(t => t.id === id)) return;
+
+      // Don't create if section is already 100% checked off
+      const totalItems = sec.items.length + (ev.customItems?.[sIdx]?.length || 0);
+      const hiddenCount = Object.keys(ev.hiddenItems || {}).filter(k => k.startsWith(sIdx + '_')).length;
+      const doneCount = Object.keys(ev.itemStates || {}).filter(k => k.startsWith(sIdx + '_') && ev.itemStates[k]).length;
+      if (totalItems > 0 && doneCount >= (totalItems - hiddenCount)) return;
+
+      // Priority is purely driven by dueDate — effectivePriority() will handle it
+      state.tasks.push({
+        id, priority: 'soon', dueDate,
+        event: ev.name, tool: 'Checklist',
+        title: `${sec.title} — ${ev.name}`,
+        meta: `📅 Event: ${ev.date}${ev.venue ? ' · ' + ev.venue : ''}`,
+        detail: `Checklist section due. Open the ${ev.name} event to check off items in "${sec.title}".`,
+        custom: false, done: false, _sectionTask: true,
+        _eventId: ev.id,
       });
     });
   });
