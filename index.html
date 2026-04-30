@@ -2500,6 +2500,290 @@ const SEED_EVENTS = [
   },
 ];
 
+// === TEMPLATES ===
+const SEED_TEMPLATES = [
+  {
+    id: 'tpl-artshow', name: 'Art Show', emoji: '🎨',
+    description: 'Full checklist for Off-Street, Bluegrass, Territorial, Labor Day, Fall Show',
+    type: 'art-show',
+    fields: [
+      { key: 'venue', label: 'Venue / Location', hint: 'Past: Courthouse Plaza, Whiskey Row, Gurley St.' },
+      { key: 'permitContact', label: 'County Permit Contact', hint: 'Usually: Jasmine Menna' },
+      { key: 'healthContact', label: 'Health Dept. Contact', hint: 'Usually: Sally Shelby — 928-442-5510' },
+      { key: 'restroomVendor', label: 'Restroom Vendor', hint: 'Past: Reliable Portable Restrooms (Jaylin)' },
+      { key: 'foodVendorCount', label: 'Est. Food Vendors', hint: 'Used to notify county health dept.' },
+    ],
+    sections: [
+      { title: '🗓️ 90 Days Out', items: [
+        'Submit county special event permit application',
+        'Submit city E-TRAKiT permit application',
+        'Confirm venue availability and booking',
+        'Open JotForm vendor applications',
+        'Notify past vendors — save the date',
+        'Begin sponsor outreach',
+      ]},
+      { title: '🗓️ 60 Days Out', items: [
+        'Newsletter #1 blast',
+        'Social media posts scheduled (Matt)',
+        'Food vendor list sent to county health dept.',
+        'Confirm vendor count target',
+        'Confirm restroom vendor',
+        'Confirm insurance certificate (ACT Insurance)',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2 blast',
+        'Send finalized vendor list to Jasmine Menna',
+        'Acceptance letters sent (CC Matt)',
+        'Confirm all sponsor placements',
+        'Finalize event map / booth layout',
+        'Confirm TPT license compliance for food vendors',
+        'Confirm restroom placement with county',
+      ]},
+      { title: 'Vendor Management', items: [
+        'All JotForm applications reviewed',
+        'Booth assignments complete',
+        'Waitlist managed',
+        'Acceptance letters sent for all placed vendors',
+        'Denial letters sent (keep $50 app fee)',
+        'Food vendor health permits verified',
+      ]},
+      { title: 'Venue & Logistics', items: [
+        'Confirm venue booking',
+        'Confirm road closure / permit approved',
+        'Restroom vendor confirmed + placed',
+        'Staff arrival time confirmed',
+        'Complete walkthrough',
+        'Walkthrough Checklist',
+        'Bring Event Box',
+      ]},
+      { title: 'Sponsors & Partners', items: [
+        'Presenting sponsor confirmed',
+        'All sponsor agreements signed',
+        'Sponsor banners/signage arranged',
+        'Sponsor booth placements confirmed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'Vendor check-in table set up',
+        'Walkthrough with county/city contact',
+        'Photos — Matt on site',
+        'Issues log running',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you emails to sponsors',
+        'Thank-you to venue contact',
+        'Photos edited (CapCut — Matt)',
+        'Debrief notes documented',
+        'Survey sent to vendors',
+        'File permits and paperwork',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-coffee', name: 'Coffee Connect', emoji: '☕',
+    description: 'Monthly networking breakfast — hosted by member business',
+    type: 'coffee-connect',
+    fields: [
+      { key: 'venue', label: 'Host Venue', hint: 'Past: Prescott Lakes, Espire Sports, various member businesses' },
+      { key: 'hostContact', label: 'Host Contact Name & Phone', hint: 'Coordinate F&B, room layout, sound system' },
+      { key: 'eventPartner', label: 'EXPO Event Partner', hint: '$250 table / $1,000 full — one partner per event' },
+      { key: 'speaker', label: 'Speaker / Featured Member', hint: 'Optional — 5 min spotlight' },
+    ],
+    sections: [
+      { title: '🗓️ 90 Days Out', items: [
+        'Confirm host agreement on file',
+        'Site visit scheduled',
+      ]},
+      { title: '🗓️ 60 Days Out', items: [
+        'Newsletter #1',
+        'Confirm venue event manager contact',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Build event in MC Trade',
+        'Confirm event partner',
+      ]},
+      { title: 'Office Planning', items: [
+        'Host agreement copy on file',
+        'Site visit completed',
+        'Event agenda drafted',
+        'Registration on website / MC Trade',
+        'Flyers: membership, website, social, VIC',
+      ]},
+      { title: 'Venue', items: [
+        'Drinks + refreshments confirmed',
+        'Sound system confirmed',
+        'Raffle / 50-50 / prize tables set',
+        'Space layout confirmed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'Sign-in table',
+        'Event partner recognition',
+        'Networking',
+        'Photos (Matt)',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to venue host',
+        'Thank-you to EXPO event partner',
+        'Survey',
+        'Debrief notes',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-luncheon', name: 'Luncheon / Awards Event', emoji: '🏆',
+    description: 'Seated luncheon format — Women in Business, Business Awards, etc.',
+    type: 'luncheon',
+    fields: [
+      { key: 'venue', label: 'Venue', hint: 'Past: Hilton Garden Inn (Sam Hill Warehouse), Prescott Resort' },
+      { key: 'venueContact', label: 'Venue Contact', hint: 'e.g. Tamara Burks — 928-515-3422' },
+      { key: 'caterer', label: 'Caterer / F&B', hint: 'Past: Crossroads Café, venue in-house' },
+      { key: 'speaker', label: 'Speaker', hint: 'Must have full title. Email Agenda + Flyer 30 days prior.' },
+      { key: 'emcee', label: 'Emcee', hint: 'Confirm at least 30 days out' },
+      { key: 'sponsors', label: 'Sponsors (tier + name)', hint: 'Include all tiers — verify against updated 2026 list' },
+    ],
+    sections: [
+      { title: '🗓️ 90 Days Out', items: [
+        'Confirm venue booking',
+        'Speaker identified and confirmed',
+        'Sponsor outreach begins',
+      ]},
+      { title: '🗓️ 60 Days Out', items: [
+        'Newsletter #1',
+        'Flyer designed (Matt)',
+        'Registration open (MC Trade / website)',
+        'Catering confirmed — menu selected',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Agenda finalized',
+        'Agenda + Flyer emailed to speaker',
+        'Emcee confirmed',
+        'All sponsor logos collected',
+        'AV/sound confirmed with venue',
+      ]},
+      { title: 'Venue & Logistics', items: [
+        'Confirm room setup (rounds, head table, podium)',
+        'Confirm A/V — mic, screen, clicker',
+        'Registration table set up (paid event)',
+        'Complete walkthrough',
+        'Walkthrough Checklist',
+        'Bring Event Box',
+      ]},
+      { title: 'Sponsors & Partners', items: [
+        'All sponsor agreements signed',
+        'Sponsor recognition in program/slides',
+        'Sponsor table assignments confirmed',
+        'Sponsor banners placed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival (90 min before)',
+        'Registration table active',
+        'Speaker greeted + briefed',
+        'Photos (Matt)',
+        'Run of show confirmed with emcee',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to speaker (schedule — do not send immediately)',
+        'Thank-you to venue',
+        'Thank-you to sponsors',
+        'Photos (CapCut — Matt)',
+        'Survey / Google Form',
+        'Debrief notes',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-networking', name: 'Networking @ Nite', emoji: '🍻',
+    description: 'Evening mixer at member business — no registration, free event',
+    type: 'networking',
+    fields: [
+      { key: 'venue', label: 'Host Venue', hint: 'Past: Cutter Aviation (July), Barley Hound (Oct)' },
+      { key: 'hostContact', label: 'Host Contact', hint: 'Coordinate setup, food/drinks, parking' },
+      { key: 'eventPartner', label: 'EXPO Event Partner', hint: 'Optional — $250/$1,000' },
+    ],
+    sections: [
+      { title: '🗓️ 60 Days Out', items: [
+        'Confirm host agreement',
+        'Newsletter #1',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Social posts (Matt)',
+        'Confirm event partner',
+      ]},
+      { title: 'Venue', items: [
+        'Food + drinks confirmed (host provides)',
+        'Parking situation assessed',
+        'Space layout confirmed',
+        'No sign-in table (free event)',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'Event partner recognition',
+        'Photos (Matt)',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to host',
+        'Thank-you to event partner',
+        'Photos (CapCut — Matt)',
+        'Debrief notes',
+      ]},
+    ],
+  },
+  {
+    id: 'tpl-vets', name: 'Vets Connect', emoji: '🎖️',
+    description: 'Veterans networking — Connect (May) or EXPO (Aug/Nov) format',
+    type: 'vets',
+    fields: [
+      { key: 'venue', label: 'Venue', hint: 'Connect: American Legion Post 6 | EXPO: Club at Prescott Lakes | Nov: Phippen Museum' },
+      { key: 'venueContact', label: 'Venue Contact', hint: 'American Legion: Brenda Smull | Lakes: Verify 2026 Mgr | Phippen: Edd Kellerman' },
+      { key: 'emcee', label: 'Emcee', hint: 'Past: Patrick Kuykendall (May)' },
+      { key: 'sponsor', label: 'Presenting Sponsor', hint: "Past: Bucky's & Yavapai Casinos" },
+    ],
+    sections: [
+      { title: '🗓️ 60 Days Out', items: [
+        'Confirm venue booking',
+        'Newsletter #1',
+        'Confirm presenting sponsor',
+      ]},
+      { title: '🗓️ 30 Days Out', items: [
+        'Newsletter #2',
+        'Confirm emcee / speaker',
+        'Confirm dignitaries (Eli Crane office?)',
+        'Confirm refreshments',
+      ]},
+      { title: 'Venue & Logistics', items: [
+        'Confirm room setup',
+        'Refreshments confirmed',
+        'Staff arrival 4:30 PM',
+        'Complete walkthrough',
+        'Walkthrough Checklist',
+        'Bring Event Box',
+      ]},
+      { title: 'Sponsors & Partners', items: [
+        'Presenting sponsor confirmed',
+        'Team RWB partnership acknowledged',
+        'Sponsor recognition confirmed',
+      ]},
+      { title: 'Day-Of', items: [
+        'Staff arrival',
+        'No sign-in table (free event)',
+        'Sponsor recognition',
+        'Photos (Matt)',
+      ]},
+      { title: 'Post-Event', items: [
+        'Thank-you to venue host',
+        'Thank-you to sponsors',
+        'Photos (CapCut — Matt)',
+        'Debrief notes',
+      ]},
+    ],
+  },
+];
+
+
 // ============================================================================
 // STORAGE LAYER
 // ============================================================================
@@ -3169,288 +3453,6 @@ function renderContacts() {
   document.getElementById('contacts-list').innerHTML = html;
 }
 
-// === TEMPLATES ===
-const SEED_TEMPLATES = [
-  {
-    id: 'tpl-artshow', name: 'Art Show', emoji: '🎨',
-    description: 'Full checklist for Off-Street, Bluegrass, Territorial, Labor Day, Fall Show',
-    type: 'art-show',
-    fields: [
-      { key: 'venue', label: 'Venue / Location', hint: 'Past: Courthouse Plaza, Whiskey Row, Gurley St.' },
-      { key: 'permitContact', label: 'County Permit Contact', hint: 'Usually: Jasmine Menna' },
-      { key: 'healthContact', label: 'Health Dept. Contact', hint: 'Usually: Sally Shelby — 928-442-5510' },
-      { key: 'restroomVendor', label: 'Restroom Vendor', hint: 'Past: Reliable Portable Restrooms (Jaylin)' },
-      { key: 'foodVendorCount', label: 'Est. Food Vendors', hint: 'Used to notify county health dept.' },
-    ],
-    sections: [
-      { title: '🗓️ 90 Days Out', items: [
-        'Submit county special event permit application',
-        'Submit city E-TRAKiT permit application',
-        'Confirm venue availability and booking',
-        'Open JotForm vendor applications',
-        'Notify past vendors — save the date',
-        'Begin sponsor outreach',
-      ]},
-      { title: '🗓️ 60 Days Out', items: [
-        'Newsletter #1 blast',
-        'Social media posts scheduled (Matt)',
-        'Food vendor list sent to county health dept.',
-        'Confirm vendor count target',
-        'Confirm restroom vendor',
-        'Confirm insurance certificate (ACT Insurance)',
-      ]},
-      { title: '🗓️ 30 Days Out', items: [
-        'Newsletter #2 blast',
-        'Send finalized vendor list to Jasmine Menna',
-        'Acceptance letters sent (CC Matt)',
-        'Confirm all sponsor placements',
-        'Finalize event map / booth layout',
-        'Confirm TPT license compliance for food vendors',
-        'Confirm restroom placement with county',
-      ]},
-      { title: 'Vendor Management', items: [
-        'All JotForm applications reviewed',
-        'Booth assignments complete',
-        'Waitlist managed',
-        'Acceptance letters sent for all placed vendors',
-        'Denial letters sent (keep $50 app fee)',
-        'Food vendor health permits verified',
-      ]},
-      { title: 'Venue & Logistics', items: [
-        'Confirm venue booking',
-        'Confirm road closure / permit approved',
-        'Restroom vendor confirmed + placed',
-        'Staff arrival time confirmed',
-        'Complete walkthrough',
-        'Walkthrough Checklist',
-        'Bring Event Box',
-      ]},
-      { title: 'Sponsors & Partners', items: [
-        'Presenting sponsor confirmed',
-        'All sponsor agreements signed',
-        'Sponsor banners/signage arranged',
-        'Sponsor booth placements confirmed',
-      ]},
-      { title: 'Day-Of', items: [
-        'Staff arrival',
-        'Vendor check-in table set up',
-        'Walkthrough with county/city contact',
-        'Photos — Matt on site',
-        'Issues log running',
-      ]},
-      { title: 'Post-Event', items: [
-        'Thank-you emails to sponsors',
-        'Thank-you to venue contact',
-        'Photos edited (CapCut — Matt)',
-        'Debrief notes documented',
-        'Survey sent to vendors',
-        'File permits and paperwork',
-      ]},
-    ],
-  },
-  {
-    id: 'tpl-coffee', name: 'Coffee Connect', emoji: '☕',
-    description: 'Monthly networking breakfast — hosted by member business',
-    type: 'coffee-connect',
-    fields: [
-      { key: 'venue', label: 'Host Venue', hint: 'Past: Prescott Lakes, Espire Sports, various member businesses' },
-      { key: 'hostContact', label: 'Host Contact Name & Phone', hint: 'Coordinate F&B, room layout, sound system' },
-      { key: 'eventPartner', label: 'EXPO Event Partner', hint: '$250 table / $1,000 full — one partner per event' },
-      { key: 'speaker', label: 'Speaker / Featured Member', hint: 'Optional — 5 min spotlight' },
-    ],
-    sections: [
-      { title: '🗓️ 90 Days Out', items: [
-        'Confirm host agreement on file',
-        'Site visit scheduled',
-      ]},
-      { title: '🗓️ 60 Days Out', items: [
-        'Newsletter #1',
-        'Confirm venue event manager contact',
-      ]},
-      { title: '🗓️ 30 Days Out', items: [
-        'Newsletter #2',
-        'Build event in MC Trade',
-        'Confirm event partner',
-      ]},
-      { title: 'Office Planning', items: [
-        'Host agreement copy on file',
-        'Site visit completed',
-        'Event agenda drafted',
-        'Registration on website / MC Trade',
-        'Flyers: membership, website, social, VIC',
-      ]},
-      { title: 'Venue', items: [
-        'Drinks + refreshments confirmed',
-        'Sound system confirmed',
-        'Raffle / 50-50 / prize tables set',
-        'Space layout confirmed',
-      ]},
-      { title: 'Day-Of', items: [
-        'Staff arrival',
-        'Sign-in table',
-        'Event partner recognition',
-        'Networking',
-        'Photos (Matt)',
-      ]},
-      { title: 'Post-Event', items: [
-        'Thank-you to venue host',
-        'Thank-you to EXPO event partner',
-        'Survey',
-        'Debrief notes',
-      ]},
-    ],
-  },
-  {
-    id: 'tpl-luncheon', name: 'Luncheon / Awards Event', emoji: '🏆',
-    description: 'Seated luncheon format — Women in Business, Business Awards, etc.',
-    type: 'luncheon',
-    fields: [
-      { key: 'venue', label: 'Venue', hint: 'Past: Hilton Garden Inn (Sam Hill Warehouse), Prescott Resort' },
-      { key: 'venueContact', label: 'Venue Contact', hint: 'e.g. Tamara Burks — 928-515-3422' },
-      { key: 'caterer', label: 'Caterer / F&B', hint: 'Past: Crossroads Café, venue in-house' },
-      { key: 'speaker', label: 'Speaker', hint: 'Must have full title. Email Agenda + Flyer 30 days prior.' },
-      { key: 'emcee', label: 'Emcee', hint: 'Confirm at least 30 days out' },
-      { key: 'sponsors', label: 'Sponsors (tier + name)', hint: 'Include all tiers — verify against updated 2026 list' },
-    ],
-    sections: [
-      { title: '🗓️ 90 Days Out', items: [
-        'Confirm venue booking',
-        'Speaker identified and confirmed',
-        'Sponsor outreach begins',
-      ]},
-      { title: '🗓️ 60 Days Out', items: [
-        'Newsletter #1',
-        'Flyer designed (Matt)',
-        'Registration open (MC Trade / website)',
-        'Catering confirmed — menu selected',
-      ]},
-      { title: '🗓️ 30 Days Out', items: [
-        'Newsletter #2',
-        'Agenda finalized',
-        'Agenda + Flyer emailed to speaker',
-        'Emcee confirmed',
-        'All sponsor logos collected',
-        'AV/sound confirmed with venue',
-      ]},
-      { title: 'Venue & Logistics', items: [
-        'Confirm room setup (rounds, head table, podium)',
-        'Confirm A/V — mic, screen, clicker',
-        'Registration table set up (paid event)',
-        'Complete walkthrough',
-        'Walkthrough Checklist',
-        'Bring Event Box',
-      ]},
-      { title: 'Sponsors & Partners', items: [
-        'All sponsor agreements signed',
-        'Sponsor recognition in program/slides',
-        'Sponsor table assignments confirmed',
-        'Sponsor banners placed',
-      ]},
-      { title: 'Day-Of', items: [
-        'Staff arrival (90 min before)',
-        'Registration table active',
-        'Speaker greeted + briefed',
-        'Photos (Matt)',
-        'Run of show confirmed with emcee',
-      ]},
-      { title: 'Post-Event', items: [
-        'Thank-you to speaker (schedule — do not send immediately)',
-        'Thank-you to venue',
-        'Thank-you to sponsors',
-        'Photos (CapCut — Matt)',
-        'Survey / Google Form',
-        'Debrief notes',
-      ]},
-    ],
-  },
-  {
-    id: 'tpl-networking', name: 'Networking @ Nite', emoji: '🍻',
-    description: 'Evening mixer at member business — no registration, free event',
-    type: 'networking',
-    fields: [
-      { key: 'venue', label: 'Host Venue', hint: 'Past: Cutter Aviation (July), Barley Hound (Oct)' },
-      { key: 'hostContact', label: 'Host Contact', hint: 'Coordinate setup, food/drinks, parking' },
-      { key: 'eventPartner', label: 'EXPO Event Partner', hint: 'Optional — $250/$1,000' },
-    ],
-    sections: [
-      { title: '🗓️ 60 Days Out', items: [
-        'Confirm host agreement',
-        'Newsletter #1',
-      ]},
-      { title: '🗓️ 30 Days Out', items: [
-        'Newsletter #2',
-        'Social posts (Matt)',
-        'Confirm event partner',
-      ]},
-      { title: 'Venue', items: [
-        'Food + drinks confirmed (host provides)',
-        'Parking situation assessed',
-        'Space layout confirmed',
-        'No sign-in table (free event)',
-      ]},
-      { title: 'Day-Of', items: [
-        'Staff arrival',
-        'Event partner recognition',
-        'Photos (Matt)',
-      ]},
-      { title: 'Post-Event', items: [
-        'Thank-you to host',
-        'Thank-you to event partner',
-        'Photos (CapCut — Matt)',
-        'Debrief notes',
-      ]},
-    ],
-  },
-  {
-    id: 'tpl-vets', name: 'Vets Connect', emoji: '🎖️',
-    description: 'Veterans networking — Connect (May) or EXPO (Aug/Nov) format',
-    type: 'vets',
-    fields: [
-      { key: 'venue', label: 'Venue', hint: 'Connect: American Legion Post 6 | EXPO: Club at Prescott Lakes | Nov: Phippen Museum' },
-      { key: 'venueContact', label: 'Venue Contact', hint: 'American Legion: Brenda Smull | Lakes: Verify 2026 Mgr | Phippen: Edd Kellerman' },
-      { key: 'emcee', label: 'Emcee', hint: 'Past: Patrick Kuykendall (May)' },
-      { key: 'sponsor', label: 'Presenting Sponsor', hint: "Past: Bucky's & Yavapai Casinos" },
-    ],
-    sections: [
-      { title: '🗓️ 60 Days Out', items: [
-        'Confirm venue booking',
-        'Newsletter #1',
-        'Confirm presenting sponsor',
-      ]},
-      { title: '🗓️ 30 Days Out', items: [
-        'Newsletter #2',
-        'Confirm emcee / speaker',
-        'Confirm dignitaries (Eli Crane office?)',
-        'Confirm refreshments',
-      ]},
-      { title: 'Venue & Logistics', items: [
-        'Confirm room setup',
-        'Refreshments confirmed',
-        'Staff arrival 4:30 PM',
-        'Complete walkthrough',
-        'Walkthrough Checklist',
-        'Bring Event Box',
-      ]},
-      { title: 'Sponsors & Partners', items: [
-        'Presenting sponsor confirmed',
-        'Team RWB partnership acknowledged',
-        'Sponsor recognition confirmed',
-      ]},
-      { title: 'Day-Of', items: [
-        'Staff arrival',
-        'No sign-in table (free event)',
-        'Sponsor recognition',
-        'Photos (Matt)',
-      ]},
-      { title: 'Post-Event', items: [
-        'Thank-you to venue host',
-        'Thank-you to sponsors',
-        'Photos (CapCut — Matt)',
-        'Debrief notes',
-      ]},
-    ],
-  },
-];
 
 // Template state
 let activeTplId = null;
@@ -4318,6 +4320,78 @@ document.getElementById('modal').addEventListener('click', (e) => {
 });
 
 // === BOOT ===
+
+// 3-MONTHS-AHEAD TASK ENGINE
+// Sheri's rule: be 3 months ahead on all events wherever possible.
+// This runs at startup and generates reminder tasks for events coming up
+// within the next 120 days that don't already have a "start prep" task.
+function runAheadEngine() {
+  const today = getTodayStr();
+  const todayMs = new Date(today).getTime();
+  const horizonMs = todayMs + (120 * 24 * 60 * 60 * 1000); // 120 days out
+
+  // Events that qualify: upcoming, not hidden, not art shows (those have their own timelines)
+  const upcoming = state.events.filter(e => {
+    if (e.hidden) return false;
+    const eMs = new Date(e.date + 'T12:00:00').getTime();
+    return eMs >= todayMs && eMs <= horizonMs;
+  });
+
+  upcoming.forEach(ev => {
+    const eDate = new Date(ev.date + 'T12:00:00');
+    const daysOut = Math.round((eDate.getTime() - todayMs) / (24 * 60 * 60 * 1000));
+
+    // For each event, figure out which prep milestone is due
+    // 90 days: start prep / permits / sponsor outreach
+    // 60 days: newsletter #1 / marketing
+    // 30 days: newsletter #2 / finalize agenda / confirm contacts
+
+    const milestones = [
+      { days: 90, priority: 'week',  label: '90-day prep',
+        title: `[90-Day Prep] ${ev.name} — start permits, sponsor outreach`,
+        detail: `Event is ${daysOut} days away (${ev.date}). Sheri's 3-month rule: submit county/city permits, begin sponsor outreach, confirm venue, open vendor applications if applicable.` },
+      { days: 60, priority: 'week',  label: '60-day prep',
+        title: `[60-Day Prep] ${ev.name} — Newsletter #1, marketing, confirm F&B`,
+        detail: `Event is ${daysOut} days away (${ev.date}). Send Newsletter #1, schedule social posts with Matt, confirm catering/F&B, finalize sponsor list.` },
+      { days: 30, priority: 'today', label: '30-day prep',
+        title: `[30-Day Prep] ${ev.name} — Newsletter #2, finalize agenda, speaker outreach`,
+        detail: `Event is ${daysOut} days away (${ev.date}). Send Newsletter #2, finalize and send agenda to speaker (30-day rule), confirm emcee, confirm all logistics.` },
+    ];
+
+    milestones.forEach(m => {
+      // Only create if we're within 7 days of when this milestone should fire
+      // i.e., daysOut is between m.days-7 and m.days+14
+      if (daysOut > m.days + 14 || daysOut < m.days - 7) return;
+
+      const existingKey = `ahead_${ev.id}_${m.days}`;
+      // Check if this task already exists
+      const exists = state.tasks.some(t => t.id === existingKey);
+      if (exists) return;
+
+      // Calculate what the due date should be (event date minus m.days)
+      const dueDate = new Date(eDate.getTime() - (m.days * 24 * 60 * 60 * 1000))
+        .toISOString().slice(0, 10);
+
+      state.tasks.unshift({
+        id: existingKey,
+        priority: m.priority,
+        dueDate,
+        event: ev.name,
+        tool: 'Planning',
+        title: m.title,
+        meta: `📅 Event: ${ev.date} · ${ev.venue || ''}`,
+        detail: m.detail,
+        custom: false,
+        done: false,
+        _aheadTask: true,
+      });
+    });
+  });
+
+  saveState();
+}
+
+runAheadEngine();
 setView('tasks');
 </script>
 </body>
